@@ -75,25 +75,21 @@ public class GhostPlayer extends MovableAreaEntity {
 	        }
 	    }
 	   
-	    /**
-	     * Leave an area by unregister this player
-	     */
-	    public void leaveArea(){
-	        getOwnerArea().unregisterActor(this);
-	    }
+	   
 
-	    /**
-	     *
-	     * @param area (Area): initial area, not null
-	     * @param position (DiscreteCoordinates): initial position, not null
-	     */
-	    public void enterArea(Area area, DiscreteCoordinates position){
-	        area.registerActor(this);
-	        area.setViewCandidate(this);
-	        setOwnerArea(area);
-	        setCurrentPosition(position.toVector());
-	        resetMotion();
-	    }
+	    
+	public void enterArea(Area area, DiscreteCoordinates position){
+	    area.registerActor(this);
+	    area.setViewCandidate(this);
+        setOwnerArea(area);
+	    setCurrentPosition(position.toVector());
+	    resetMotion();
+	}
+
+	 
+	public void leaveArea(){
+	    getOwnerArea().unregisterActor(this);
+	}
     
 	@Override
 	public void draw(Canvas canvas) {
@@ -108,8 +104,6 @@ public class GhostPlayer extends MovableAreaEntity {
 	public void strengthen() {
 		hp = 10;
 	}
-
-	///Ghost implements Interactable
 
 	@Override
 	public boolean takeCellSpace() {
