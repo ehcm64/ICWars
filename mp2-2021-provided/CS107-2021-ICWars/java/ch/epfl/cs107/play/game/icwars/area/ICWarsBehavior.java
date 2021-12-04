@@ -18,7 +18,6 @@ public class ICWarsBehavior extends AreaBehavior {
         MOUNTAIN(-256, 4),
         CITY(-1, 2);
 
-
 		final int type;
 		final int isWalkable;
 
@@ -80,6 +79,10 @@ public class ICWarsBehavior extends AreaBehavior {
 
 		@Override
 		protected boolean canEnter(Interactable entity) {
+			//TODO 1.1.1 incomplet
+			if (entity.takeCellSpace()) {
+				return false;
+			}
 			return true;
 	    }
 

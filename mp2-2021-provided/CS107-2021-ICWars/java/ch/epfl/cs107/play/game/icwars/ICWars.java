@@ -1,6 +1,5 @@
 package ch.epfl.cs107.play.game.icwars;
 
-
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
@@ -54,11 +53,7 @@ public class ICWars extends AreaGame {
 	 }
 	@Override
 	public void update(float deltaTime) {
-		if(player.isWeak()){
-			switchArea();         
-		}
 		super.update(deltaTime);
-
 	}
 
 	@Override
