@@ -17,15 +17,11 @@ public abstract class ICWarsActor extends MovableAreaEntity{
     public enum Faction{
         ALLY,
         ENNEMY;
- 
     }
 
-    
-    
     public ICWarsActor(Area area, DiscreteCoordinates position, Faction faction){
         super(area, orientation, position);
         this.faction = faction;
-
     }
 
     public void leaveArea(){

@@ -19,11 +19,11 @@ public class ICWarsBehavior extends AreaBehavior {
         CITY(-1, 2);
 
 		final int type;
-		final int isWalkable;
+		final int defStars;
 
-	    ICWarsCellType(int type, int isWalkable){
+	    ICWarsCellType(int type, int defStars){
 			this.type = type;
-			this.isWalkable = isWalkable;
+			this.defStars = defStars;
 		}
 
 		public static ICWarsCellType toType(int type){
