@@ -1,38 +1,43 @@
 package ch.epfl.cs107.play.game.icwars;
 
+import java.util.ArrayList;
 
+import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
+import ch.epfl.cs107.play.game.icwars.actor.Unit;
+import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
+import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
+import ch.epfl.cs107.play.game.icwars.actor.units.Soldat;
+import ch.epfl.cs107.play.game.icwars.actor.units.Tank;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
-import ch.epfl.cs107.play.game.tutosSolution.actor.GhostPlayer;
-import ch.epfl.cs107.play.game.tutosSolution.area.Tuto2Area;
-import ch.epfl.cs107.play.game.tutosSolution.area.tuto2.Ferme;
-import ch.epfl.cs107.play.game.tutosSolution.area.tuto2.Village;
+import ch.epfl.cs107.play.game.icwars.area.Level0;
+import ch.epfl.cs107.play.game.icwars.area.Level1;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.window.Button;
+import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
 public class ICWars extends AreaGame {
 	
 	public final static float CAMERA_SCALE_FACTOR = 10.f;
 
-	private GhostPlayer player;
-	private final String[] areas = {"zelda/Ferme", "zelda/Village"};
+	private RealPlayer player;
+	private ArrayList<Unit> playerUnits = new ArrayList<Unit>();
+	private final String[] areas = {"icwars/Level0", "icwars/Level1"};
 	
 	private int areaIndex;
 	/**
 	 * Add all the areas
 	 */
 	private void createAreas(){
-
-		addArea(new Ferme());
-		addArea(new Village());
-
+		addArea(new Level0());
+		addArea(new Level1());
 	}
 
 	@Override
 	public boolean begin(Window window, FileSystem fileSystem) {
-
 
 		if (super.begin(window, fileSystem)) {
 			createAreas();
@@ -43,22 +48,43 @@ public class ICWars extends AreaGame {
 		return false;
 	}
 	
-	 private void initArea(String areaKey) {
+	private void initArea(String areaKey) {
 		 
-		  ICWarsArea area = (ICWarsArea)setCurrentArea(areaKey, true);
-		  DiscreteCoordinates coords = area.getPlayerSpawnPosition();
-		  player = new GhostPlayer(area, Orientation.DOWN, coords,"ghost.1");
-		  player.enterArea(area, coords);
-	      player.centerCamera();
-		 
-	 }
+		ICWarsArea area = (ICWarsArea)setCurrentArea(areaKey, true);
+		DiscreteCoordinates coords = area.getPlayerSpawnPosition();
+		addUnits();
+		player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
+		player.enterArea(area, coords);
+		for (Unit unit : playerUnits) {
+			unit.enterArea(area, unit.getCoordinates());
+		}
+	    player.centerCamera();
+	}
+
 	@Override
 	public void update(float deltaTime) {
-		if(player.isWeak()){
-			switchArea();         
+		Keyboard keyboard = getCurrentArea().getKeyboard();
+		if (keyboard.get(Keyboard.N).isDown()) {
+			nextArea();
+		} else if (keyboard.get(Keyboard.R).isDown()) {
+			reset();
 		}
 		super.update(deltaTime);
+	}
 
+	private void reset() {
+
+	}
+
+	private void addUnits() {
+		playerUnits.add(new Soldat(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY));
+	    playerUnits.add(new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY));
+	}
+
+	
+
+	private Area getOwnerArea() {
+		return null;
 	}
 
 	@Override
@@ -70,17 +96,11 @@ public class ICWars extends AreaGame {
 		return "ICWars";
 	}
 
-	protected void switchArea() {
+	protected void nextArea() {
 
 		player.leaveArea();
-
 		areaIndex = (areaIndex==0) ? 1 : 0;
-
-		Tuto2Area currentArea = (Tuto2Area)setCurrentArea(areas[areaIndex], false);
+		ICWarsArea currentArea = (ICWarsArea)setCurrentArea(areas[areaIndex], false);
 		player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
-
-		player.strengthen();
 	}
-
 }
-

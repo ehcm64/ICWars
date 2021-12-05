@@ -18,13 +18,12 @@ public class ICWarsBehavior extends AreaBehavior {
         MOUNTAIN(-256, 4),
         CITY(-1, 2);
 
-
 		final int type;
-		final int isWalkable;
+		final int defStars;
 
-	    ICWarsCellType(int type, int isWalkable){
+	    ICWarsCellType(int type, int defStars){
 			this.type = type;
-			this.isWalkable = isWalkable;
+			this.defStars = defStars;
 		}
 
 		public static ICWarsCellType toType(int type){
@@ -80,6 +79,10 @@ public class ICWarsBehavior extends AreaBehavior {
 
 		@Override
 		protected boolean canEnter(Interactable entity) {
+			//TODO 1.1.1 incomplet
+			if (entity.takeCellSpace()) {
+				return false;
+			}
 			return true;
 	    }
 
