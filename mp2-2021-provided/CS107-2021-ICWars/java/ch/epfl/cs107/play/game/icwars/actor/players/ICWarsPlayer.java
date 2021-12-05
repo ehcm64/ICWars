@@ -1,21 +1,77 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
+import java.util.ArrayList;
+
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
+import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayer extends ICWarsActor{
+    //TODO 2.2.2
+    ArrayList<Unit> units;
+    Sprite sprite;
+    String spriteName;
 
-    public ICWarsPlayer(Area area, DiscreteCoordinates position, Faction faction) {
+    public ICWarsPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction);
-        //TODO Auto-generated constructor stub
+        this.units = units;
+        for (Unit unit : units) {
+            area.registerActor(unit);
+        }
     }
 
     @Override
     public void draw(Canvas canvas) {
-        // TODO Auto-generated method stub
-        
+        sprite.draw(canvas);
+    }
+
+    public void centerCamera() {
+        getOwnerArea().setViewCandidate(this);
+    }
+
+    public void enterArea(Area area, DiscreteCoordinates position) {
+	    area.registerActor(this);
+	    area.setViewCandidate(this);
+        setOwnerArea(area);
+	    setCurrentPosition(position.toVector());
+	    resetMotion();
+	}
+
+    @Override
+	public void leaveArea(){
+        for (Unit unit: units) {
+            getOwnerArea().unregisterActor(unit);
+        }
+	    getOwnerArea().unregisterActor(this);
+	}
+
+    @Override
+    public void update(float deltaTime) {
+        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
+        for (Unit unit : units) {
+            if (unit.getHp() == 0) {
+                getOwnerArea().unregisterActor(unit);
+                unitsToRemove.add(unit);
+            }
+        }
+        for (Unit unit : unitsToRemove) {
+            units.remove(unit);
+        }
+        super.update(deltaTime);
     }
     
+    @Override
+    public boolean takeCellSpace() {
+        return false;
+    }
+
+    public boolean isDefeated() {
+        if (units.size() == 0) {
+            return true;
+        }
+        return false;
+    }
 }

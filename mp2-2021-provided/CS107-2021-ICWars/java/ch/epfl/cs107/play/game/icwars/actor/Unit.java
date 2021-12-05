@@ -7,18 +7,19 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class Unit extends ICWarsActor {
-    private int hp;
-    private int maxHp;
-    private String name;
-    private String spriteName;
-    private int damage;
-    private int moveRadius;
-    private Sprite sprite;
+    //TODO 2.2.1
+    protected float hp;
+    protected float maxHp;
+    protected String name;
+    protected String spriteName;
+    protected float damage;
+    protected int moveRadius;
+    protected Sprite sprite;
+    private DiscreteCoordinates coordinates;
 
     public Unit(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
-        sprite = new Sprite(spriteName, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
-        //TODO Auto-generated constructor stub
+        this.coordinates = position;
     }
 
     @Override
@@ -30,23 +31,19 @@ public abstract class Unit extends ICWarsActor {
         return name;
     }
 
-    public int getHp() {
+    public float getHp() {
         return hp;
     }
 
-    public int takeDamage(int damage) {
+    public float takeDamage(int damage) {
         hp -= damage;
-        if (hp < 0) {
-            hp = 0;
-        } 
+        if (hp < 0) hp = 0;
         return hp;
     }
 
-    public int repair(int heal) {
+    public float repair(int heal) {
         hp += heal;
-        if (hp > maxHp) {
-            hp = maxHp;
-        }
+        if (hp > maxHp) hp = maxHp;
         return hp;
     }
 
@@ -56,5 +53,8 @@ public abstract class Unit extends ICWarsActor {
     public boolean takeCellSpace() {
         return true;
     }
-    
+
+    public DiscreteCoordinates getCoordinates() {
+        return coordinates;
+    }
 }
