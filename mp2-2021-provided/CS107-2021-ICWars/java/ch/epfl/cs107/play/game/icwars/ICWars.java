@@ -55,9 +55,6 @@ public class ICWars extends AreaGame {
 		addUnits();
 		player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
 		player.enterArea(area, coords);
-		for (Unit unit : playerUnits) {
-			unit.enterArea(area, unit.getCoordinates());
-		}
 	    player.centerCamera();
 	}
 
@@ -73,7 +70,7 @@ public class ICWars extends AreaGame {
 	}
 
 	private void reset() {
-
+		//TODO
 	}
 
 	private void addUnits() {
