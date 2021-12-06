@@ -13,6 +13,7 @@ public class Soldat extends Unit {
         this.moveRadius = 2;
         this.damage = 2;
         this.maxHp = 5;
+        this.hp = this.maxHp;
         if (faction.equals(Faction.ALLY)) spriteName = "icwars/friendlySoldier";
         else spriteName = "icwars/enemySoldier";
         sprite = new Sprite(spriteName, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
