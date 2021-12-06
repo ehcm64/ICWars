@@ -70,6 +70,7 @@ public class ICWars extends AreaGame {
 	}
 
 	private void reset() {
+		createAreas();
 		areaIndex = 0;
 		initArea(areas[areaIndex]);
 	}
@@ -80,6 +81,7 @@ public class ICWars extends AreaGame {
 
 	@Override
 	public void end() {
+		System.out.println("GAME OVER");
 	}
 
 	@Override
@@ -88,10 +90,15 @@ public class ICWars extends AreaGame {
 	}
 
 	protected void nextLevel() {
-		if
-		player.leaveArea();
-		areaIndex = (areaIndex==0) ? 1 : 0;
-		ICWarsArea currentArea = (ICWarsArea)setCurrentArea(areas[areaIndex], false);
-		player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+		int maxAreaIndex = areas.length - 1;
+		if (areaIndex != maxAreaIndex) {
+			areaIndex += 1;
+			player.leaveArea();
+		    ICWarsArea currentArea = (ICWarsArea)setCurrentArea(areas[areaIndex], false);
+		    player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+		} else {
+			end();
+		}
+		
 	}
 }
