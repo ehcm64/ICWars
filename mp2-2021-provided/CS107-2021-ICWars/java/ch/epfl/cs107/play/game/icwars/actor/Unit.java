@@ -17,11 +17,9 @@ public abstract class Unit extends ICWarsActor {
     protected float damage;
     protected int moveRadius;
     protected Sprite sprite;
-    private DiscreteCoordinates coordinates;
 
     public Unit(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
-        this.coordinates = position;
     }
 
     public String getName() {
@@ -89,9 +87,4 @@ public abstract class Unit extends ICWarsActor {
         // TODO Auto-generated method stub
         return false;
     }
-
-    public DiscreteCoordinates getCoordinates() {
-        return coordinates;
-    }
-    
 }

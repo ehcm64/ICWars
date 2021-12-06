@@ -62,13 +62,6 @@ public class ICWars extends AreaGame {
 		
 	    Tank tank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
 		tank.enterArea(area, new DiscreteCoordinates(2, 5));
-		
-		player.centerCamera();
-		
-		for (Unit unit : playerUnits) {
-			unit.enterArea(area, unit.getCoordinates());
-		}
-	    
 	}
 
 	@Override
