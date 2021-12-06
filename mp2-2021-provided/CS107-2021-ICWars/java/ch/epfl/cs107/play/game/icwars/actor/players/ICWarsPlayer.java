@@ -11,14 +11,15 @@ import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayer extends ICWarsActor{
     //TODO 2.2.2
-    ArrayList<Unit> units;
+    ArrayList<Unit> units = new ArrayList<Unit>();
     Sprite sprite;
-    String spriteName;
+    String name;
 
     public ICWarsPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction);
-        this.units = units;
-        
+        for (Unit unit : units) {
+            this.units.add(unit);
+        }
     }
 
     @Override
@@ -26,11 +27,28 @@ public class ICWarsPlayer extends ICWarsActor{
         sprite.draw(canvas);
     }
 
+    @Override
+    public void update(float deltaTime) {
+        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
+        for (Unit unit : this.units) {
+            if (unit.getHp() == 0) unitsToRemove.add(unit);
+        }
+        if (unitsToRemove.size() != 0) {
+            for (Unit unit : unitsToRemove) {
+                this.units.remove(unit);
+            }
+        }
+        super.update(deltaTime);
+    }
+
     public void centerCamera() {
         getOwnerArea().setViewCandidate(this);
     }
 
     public void enterArea(Area area, DiscreteCoordinates position) {
+        for (Unit unit : this.units) {
+            area.registerActor(unit);
+        }
 	    area.registerActor(this);
         setOwnerArea(area);
 	    setCurrentPosition(position.toVector());
@@ -52,7 +70,7 @@ public class ICWarsPlayer extends ICWarsActor{
     }
 
     public boolean isDefeated() {
-        if (units.size() == 0) {
+        if (this.units.size() == 0) {
             return true;
         }
         return false;

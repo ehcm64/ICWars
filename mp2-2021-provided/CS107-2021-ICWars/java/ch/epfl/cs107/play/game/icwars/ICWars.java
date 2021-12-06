@@ -49,24 +49,20 @@ public class ICWars extends AreaGame {
 	private void initArea(String areaKey) {
 		 
 		ICWarsArea area = (ICWarsArea)setCurrentArea(areaKey, true);
-		
 		DiscreteCoordinates coords = area.getPlayerSpawnPosition();
-		
-		
+		Soldat soldat = new Soldat(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
+	    Tank tank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
+		playerUnits.add(soldat);
+		playerUnits.add(tank);
 		player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
 		player.enterArea(area, coords);
-		Soldat soldat = new Soldat(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
-		soldat.enterArea(area, new DiscreteCoordinates(3, 5));
-		
-	    Tank tank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
-		tank.enterArea(area, new DiscreteCoordinates(2, 5));
 	}
 
 	@Override
 	public void update(float deltaTime) {
 		Keyboard keyboard = getCurrentArea().getKeyboard();
 		if (keyboard.get(Keyboard.N).isReleased()) {
-			nextArea();
+			nextLevel();
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
 			reset();
 		}
@@ -90,7 +86,7 @@ public class ICWars extends AreaGame {
 		return "ICWars";
 	}
 
-	protected void nextArea() {
+	protected void nextLevel() {
 		player.leaveArea();
 		areaIndex = (areaIndex==0) ? 1 : 0;
 		ICWarsArea currentArea = (ICWarsArea)setCurrentArea(areas[areaIndex], false);

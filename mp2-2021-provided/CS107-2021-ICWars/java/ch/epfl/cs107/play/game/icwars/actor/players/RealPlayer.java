@@ -15,9 +15,9 @@ public class RealPlayer extends ICWarsPlayer {
 
     public RealPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction, units);
-        if (faction.equals(Faction.ALLY)) spriteName = "icwars/allyCursor";
-        else spriteName = "icwars/enemyCursor";
-        sprite = new Sprite(spriteName, 1.f, 1.f, this);
+        if (faction.equals(Faction.ALLY)) this.name = "icwars/allyCursor";
+        else this.name = "icwars/enemyCursor";
+        sprite = new Sprite(this.name, 1.f, 1.f, this);
     }
 
     public void update(float deltaTime) {
