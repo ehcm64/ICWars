@@ -7,7 +7,6 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 
 public class Soldat extends Unit {
-
     public Soldat(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
         this.moveRadius = 2;
@@ -21,7 +20,7 @@ public class Soldat extends Unit {
     }
 
     @Override
-    public int getDamage() {
+    public float getDamage() {
         // TODO Auto-generated method stub
         return 0;
     }

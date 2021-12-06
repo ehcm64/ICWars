@@ -7,9 +7,6 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 
 public class Tank extends Unit {
-    private float maxHp = 10;
-
-
     public Tank(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
         this.moveRadius = 4;
@@ -23,21 +20,8 @@ public class Tank extends Unit {
     }
 
     @Override
-    public int getDamage() {
+    public float getDamage() {
         // TODO Auto-generated method stub
         return 0;
-    }
-
-    @Override
-    public boolean isCellInteractable() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public boolean isViewInteractable() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-    
+    }    
 }

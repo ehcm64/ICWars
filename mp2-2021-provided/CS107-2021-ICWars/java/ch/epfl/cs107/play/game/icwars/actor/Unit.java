@@ -1,7 +1,5 @@
 package ch.epfl.cs107.play.game.icwars.actor;
 
-import java.util.ArrayList;
-
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -9,7 +7,6 @@ import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class Unit extends ICWarsActor {
     //TODO 2.2.1
-    ArrayList<Unit> units;
     protected float hp;
     protected float maxHp;
     protected String name;
@@ -41,29 +38,16 @@ public abstract class Unit extends ICWarsActor {
         return hp;
     }
 
-    public abstract int getDamage();
+    public abstract float getDamage();
 
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
     }
 
-    public void enterArea(Area area, DiscreteCoordinates position) {
-	    area.registerActor(this);
-        setOwnerArea(area);
-	    setCurrentPosition(position.toVector());
-	}
-
     @Override
     public boolean takeCellSpace() {
         return true;
-    }
-
-    public boolean isDefeated() {
-        if (units.size() == 0) {
-            return true;
-        }
-        return false;
     }
 
     @Override
