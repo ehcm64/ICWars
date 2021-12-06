@@ -18,9 +18,7 @@ public class ICWarsPlayer extends ICWarsActor{
     public ICWarsPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction);
         this.units = units;
-        for (Unit unit : units) {
-            area.registerActor(unit);
-        }
+        
     }
 
     @Override
@@ -34,10 +32,9 @@ public class ICWarsPlayer extends ICWarsActor{
 
     public void enterArea(Area area, DiscreteCoordinates position) {
 	    area.registerActor(this);
-	    area.setViewCandidate(this);
         setOwnerArea(area);
 	    setCurrentPosition(position.toVector());
-	    resetMotion();
+	
 	}
 
     @Override
@@ -49,21 +46,6 @@ public class ICWarsPlayer extends ICWarsActor{
 	}
 
     @Override
-    public void update(float deltaTime) {
-        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
-        for (Unit unit : units) {
-            if (unit.getHp() == 0) {
-                getOwnerArea().unregisterActor(unit);
-                unitsToRemove.add(unit);
-            }
-        }
-        for (Unit unit : unitsToRemove) {
-            units.remove(unit);
-        }
-        super.update(deltaTime);
-    }
-    
-    @Override
     public boolean takeCellSpace() {
         return false;
     }
@@ -72,6 +54,18 @@ public class ICWarsPlayer extends ICWarsActor{
         if (units.size() == 0) {
             return true;
         }
+        return false;
+    }
+
+    @Override
+    public boolean isCellInteractable() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        // TODO Auto-generated method stub
         return false;
     }
 }

@@ -24,5 +24,17 @@ public class Tank extends Unit {
         // TODO Auto-generated method stub
         return 0;
     }
+
+    @Override
+    public boolean isCellInteractable() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        // TODO Auto-generated method stub
+        return false;
+    }
     
 }
