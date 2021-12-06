@@ -80,13 +80,16 @@ public class ICWarsBehavior extends AreaBehavior {
 		@Override
 		protected boolean canEnter(Interactable entity) {
 			//TODO 1.1.1 incomplet
-			if (entity.takeCellSpace()) {
+			boolean cellTraversable = true;
+			for (Interactable ent : this.entities) {
+				if (ent.takeCellSpace()) cellTraversable = false;
+			}
+			if (entity.takeCellSpace() && !cellTraversable) {
 				return false;
 			}
 			return true;
 	    }
 
-	    
 		@Override
 		public boolean isCellInteractable() {
 			return true;
@@ -100,8 +103,5 @@ public class ICWarsBehavior extends AreaBehavior {
 		@Override
 		public void acceptInteraction(AreaInteractionVisitor v) {
 		}
-
 	}
 }
-
-
