@@ -13,7 +13,6 @@ public abstract class Unit extends ICWarsActor {
     protected float hp;
     protected float maxHp;
     protected String name;
-    protected String spriteName;
     protected float damage;
     protected int moveRadius;
     protected Sprite sprite;

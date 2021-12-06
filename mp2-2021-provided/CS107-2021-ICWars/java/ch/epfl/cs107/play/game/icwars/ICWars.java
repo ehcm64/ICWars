@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
-import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
@@ -15,7 +14,6 @@ import ch.epfl.cs107.play.game.icwars.area.Level0;
 import ch.epfl.cs107.play.game.icwars.area.Level1;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
-import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
@@ -79,10 +77,6 @@ public class ICWars extends AreaGame {
 		//TODO
 	}
 
-	
-
-	
-
 	private Area getOwnerArea() {
 		return null;
 	}
@@ -97,7 +91,6 @@ public class ICWars extends AreaGame {
 	}
 
 	protected void nextArea() {
-
 		player.leaveArea();
 		areaIndex = (areaIndex==0) ? 1 : 0;
 		ICWarsArea currentArea = (ICWarsArea)setCurrentArea(areas[areaIndex], false);
