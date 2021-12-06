@@ -74,9 +74,9 @@ public class ICWars extends AreaGame {
 	@Override
 	public void update(float deltaTime) {
 		Keyboard keyboard = getCurrentArea().getKeyboard();
-		if (keyboard.get(Keyboard.N).isDown()) {
+		if (keyboard.get(Keyboard.N).isReleased()) {
 			nextArea();
-		} else if (keyboard.get(Keyboard.R).isDown()) {
+		} else if (keyboard.get(Keyboard.R).isReleased()) {
 			reset();
 		}
 		super.update(deltaTime);

@@ -34,7 +34,8 @@ public class ICWarsPlayer extends ICWarsActor{
 	    area.registerActor(this);
         setOwnerArea(area);
 	    setCurrentPosition(position.toVector());
-	
+        centerCamera();
+        resetMotion();
 	}
 
     @Override

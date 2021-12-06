@@ -30,16 +30,12 @@ public abstract class ICWarsActor extends MovableAreaEntity{
         area.registerActor(this);
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
-        
     }
 
     public void leaveArea(){
         getOwnerArea().unregisterActor(this);
     }
 
-    
-
-    
 	@Override
 	public List<DiscreteCoordinates> getCurrentCells() {
 		return Collections.singletonList(getCurrentMainCellCoordinates());
