@@ -13,7 +13,6 @@ public abstract class Unit extends ICWarsActor {
     protected float hp;
     protected float maxHp;
     protected String name;
-    protected String spriteName;
     protected float damage;
     protected int moveRadius;
     protected Sprite sprite;
@@ -53,20 +52,11 @@ public abstract class Unit extends ICWarsActor {
 	    area.registerActor(this);
         setOwnerArea(area);
 	    setCurrentPosition(position.toVector());
-	   
-	}
-
-    @Override
-	public void leaveArea(){
-        for (Unit unit: units) {
-            getOwnerArea().unregisterActor(unit);
-        }
-	    getOwnerArea().unregisterActor(this);
 	}
 
     @Override
     public boolean takeCellSpace() {
-        return false;
+        return true;
     }
 
     public boolean isDefeated() {
