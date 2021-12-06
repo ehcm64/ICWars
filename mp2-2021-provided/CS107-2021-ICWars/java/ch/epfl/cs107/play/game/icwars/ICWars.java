@@ -70,7 +70,8 @@ public class ICWars extends AreaGame {
 	}
 
 	private void reset() {
-		//TODO
+		areaIndex = 0;
+		initArea(areas[areaIndex]);
 	}
 
 	private Area getOwnerArea() {
@@ -87,6 +88,7 @@ public class ICWars extends AreaGame {
 	}
 
 	protected void nextLevel() {
+		if
 		player.leaveArea();
 		areaIndex = (areaIndex==0) ? 1 : 0;
 		ICWarsArea currentArea = (ICWarsArea)setCurrentArea(areas[areaIndex], false);

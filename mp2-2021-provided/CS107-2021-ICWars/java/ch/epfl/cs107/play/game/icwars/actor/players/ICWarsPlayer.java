@@ -11,9 +11,9 @@ import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayer extends ICWarsActor{
     //TODO 2.2.2
-    ArrayList<Unit> units = new ArrayList<Unit>();
-    Sprite sprite;
-    String name;
+    protected ArrayList<Unit> units = new ArrayList<Unit>();
+    protected Sprite sprite;
+    protected String name;
 
     public ICWarsPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction);
