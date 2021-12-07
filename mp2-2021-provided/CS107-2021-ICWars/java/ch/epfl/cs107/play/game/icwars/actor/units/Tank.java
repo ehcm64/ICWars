@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 public class Tank extends Unit {
     public Tank(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
-        this.moveRadius = 4;
+        this.radius = 4;
         this.damage = 7;
         this.maxHp = 10;
         this.hp = this.maxHp;

@@ -5,16 +5,22 @@ import java.util.ArrayList;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.icwars.ICWars;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
+import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Button;
+import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
 public class RealPlayer extends ICWarsPlayer {
+    private ICWarsPlayerGUI gui = new ICWarsPlayerGUI(ICWars.CAMERA_SCALE_FACTOR, this);
     private final static int MOVE_DURATION = 8;
+    private Unit selectedUnit;
 
     public RealPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction, units);
+        this.selectedUnit = null;
         if (faction.equals(Faction.ALLY)) this.name = "icwars/allyCursor";
         else this.name = "icwars/enemyCursor";
         sprite = new Sprite(this.name, 1.f, 1.f, this);
@@ -29,6 +35,22 @@ public class RealPlayer extends ICWarsPlayer {
         moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
         super.update(deltaTime);
+    }
+
+    @Override
+    public void draw(Canvas canvas) {
+        super.draw(canvas);
+        this.gui.draw(canvas);
+    }
+
+    public void selectUnit(int index) {
+        if (index < this.units.size()) {
+            this.selectedUnit = this.units.get(index);
+        }
+    }
+
+    public Unit getSelectedUnit() {
+        return selectedUnit;
     }
 
 /**

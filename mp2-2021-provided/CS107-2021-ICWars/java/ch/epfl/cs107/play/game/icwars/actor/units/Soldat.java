@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 public class Soldat extends Unit {
     public Soldat(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
-        this.moveRadius = 2;
+        this.radius = 2;
         this.damage = 2;
         this.maxHp = 5;
         this.hp = this.maxHp;
