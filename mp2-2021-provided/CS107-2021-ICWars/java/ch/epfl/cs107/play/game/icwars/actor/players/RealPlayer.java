@@ -16,11 +16,9 @@ import ch.epfl.cs107.play.window.Keyboard;
 public class RealPlayer extends ICWarsPlayer {
     private ICWarsPlayerGUI gui = new ICWarsPlayerGUI(ICWars.CAMERA_SCALE_FACTOR, this);
     private final static int MOVE_DURATION = 8;
-    private Unit selectedUnit;
 
     public RealPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction, units);
-        this.selectedUnit = null;
         if (faction.equals(Faction.ALLY)) this.name = "icwars/allyCursor";
         else this.name = "icwars/enemyCursor";
         sprite = new Sprite(this.name, 1.f, 1.f, this);
@@ -45,7 +43,7 @@ public class RealPlayer extends ICWarsPlayer {
     }
 
     public void selectUnit(int index) {
-        if (index < this.units.size() && index > 0){
+        if (index < this.units.size()) {
             this.selectedUnit = this.units.get(index);
         }
     }

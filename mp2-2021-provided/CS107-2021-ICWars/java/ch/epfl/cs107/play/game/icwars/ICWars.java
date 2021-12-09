@@ -41,6 +41,7 @@ public class ICWars extends AreaGame {
 			createAreas();
 			areaIndex = 0;
 			initArea(areas[areaIndex]);
+			this.player.startTurn();
 			return true;
 		}
 		return false;
@@ -52,10 +53,10 @@ public class ICWars extends AreaGame {
 		DiscreteCoordinates coords = area.getPlayerSpawnPosition();
 		Soldat soldat = new Soldat(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
 	    Tank tank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
-		playerUnits.add(soldat);
-		playerUnits.add(tank);
-		player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
-		player.enterArea(area, coords);
+		this.playerUnits.add(soldat);
+		this.playerUnits.add(tank);
+		this.player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
+		this.player.enterArea(area, coords);
 	}
 
 	@Override
@@ -66,15 +67,17 @@ public class ICWars extends AreaGame {
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
 			reset();
 		} else if (keyboard.get(Keyboard.U).isReleased()) {
-			player.selectUnit(0);
+			player.selectUnit(1);
 		}
 		super.update(deltaTime);
 	}
 
 	private void reset() {
+		// BUG : garde une ancienne unité aprés qu'elle ait bougé
 		createAreas();
 		areaIndex = 0;
 		initArea(areas[areaIndex]);
+		this.player.startTurn();
 	}
 
 	private Area getOwnerArea() {

@@ -19,10 +19,12 @@ public abstract class Unit extends ICWarsActor {
     protected int radius;
     protected Sprite sprite;
     protected ICWarsRange range;
+    protected boolean hasAttacked;
+    protected boolean hasMoved;
 
     public Unit(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
-        range = new ICWarsRange();
+        this.range = new ICWarsRange();
         addAllNodes();
     }
 
@@ -52,6 +54,22 @@ public abstract class Unit extends ICWarsActor {
 
     public float getHp() {
         return hp;
+    }
+
+    public void setMoveState(boolean state) {
+        this.hasMoved = state;
+    }
+
+    public boolean getMoveState() {
+        return this.hasMoved;
+    }
+
+    public void setAttackState(boolean state) {
+        this.hasAttacked = state;
+    }
+
+    public boolean getAttackState() {
+        return this.hasAttacked;
     }
 
     /**
@@ -90,6 +108,22 @@ public abstract class Unit extends ICWarsActor {
     @Override
     public boolean takeCellSpace() {
         return true;
+    }
+
+    @Override
+    public boolean changePosition(DiscreteCoordinates newPosition) {
+        //TODO Change Position INCOMPLETE
+        if (this.range.nodeExists(newPosition)) {
+            super.changePosition(newPosition);
+            this.setMoveState(true);
+            this.range = new ICWarsRange();
+            this.addAllNodes();
+            return true;
+        } else {
+            this.setMoveState(false);
+            return false;
+        }
+        
     }
 
     @Override
