@@ -45,7 +45,7 @@ public class RealPlayer extends ICWarsPlayer {
     }
 
     public void selectUnit(int index) {
-        if (index < this.units.size()) {
+        if (index < this.units.size() && index > 0){
             this.selectedUnit = this.units.get(index);
         }
     }
