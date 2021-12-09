@@ -20,6 +20,11 @@ public class Tank extends Unit {
     }
 
     @Override
+    public int getRadius() {
+        return 4;
+    }
+
+    @Override
     public float getDamage() {
         // TODO Auto-generated method stub
         return 0;

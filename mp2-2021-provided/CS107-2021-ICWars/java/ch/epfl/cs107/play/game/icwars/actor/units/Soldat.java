@@ -7,6 +7,7 @@ import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 
 public class Soldat extends Unit {
+
     public Soldat(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
         this.radius = 2;
@@ -17,6 +18,11 @@ public class Soldat extends Unit {
         else this.name = "icwars/enemySoldier";
         sprite = new Sprite(this.name, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
         //TODO Auto-generated constructor stub
+    }
+
+    @Override
+    public int getRadius() {
+        return 2;
     }
 
     @Override

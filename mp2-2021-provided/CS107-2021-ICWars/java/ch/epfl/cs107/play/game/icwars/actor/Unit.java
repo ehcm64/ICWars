@@ -29,20 +29,22 @@ public abstract class Unit extends ICWarsActor {
     private void addAllNodes() {
         int fromX = (int)getPosition().getX();
         int fromY = (int)getPosition().getY();
-        radius = 2;
+        this.radius = getRadius();
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
-                System.out.println("x + fromX = " + (x + fromX));
-                System.out.println("y + fromY = " + (y + fromY));
-                DiscreteCoordinates coords = new DiscreteCoordinates(x, y);
-                boolean hasLeftEdge = x > -radius && x + fromX > 0;
-                boolean hasRightEdge = x < radius && x + fromX < getOwnerArea().getWidth();
-                boolean hasUpEdge = y < radius && y + fromY < getOwnerArea().getHeight();
-                boolean hasDownEdge = y > -radius && y + fromY > 0;
-                range.addNode(coords, hasLeftEdge, hasUpEdge, hasRightEdge, hasDownEdge);
+                if (x + fromX >= 0 && x + fromX <= getOwnerArea().getWidth() && y + fromY >= 0 && y + fromY <= getOwnerArea().getWidth()){
+                    DiscreteCoordinates coords = new DiscreteCoordinates(x + fromX, y + fromY);
+                    boolean hasLeftEdge = x > -radius && x + fromX > 0;
+                    boolean hasRightEdge = x < radius && x + fromX < getOwnerArea().getWidth();
+                    boolean hasUpEdge = y < radius && y + fromY < getOwnerArea().getHeight();
+                    boolean hasDownEdge = y > -radius && y + fromY > 0;
+                    range.addNode(coords, hasLeftEdge, hasUpEdge, hasRightEdge, hasDownEdge);
+                }
             }
         }
     }
+
+    public abstract int getRadius();
 
     public String getName() {
         return name;

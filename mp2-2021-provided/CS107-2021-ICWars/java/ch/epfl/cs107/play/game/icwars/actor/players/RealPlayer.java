@@ -40,6 +40,7 @@ public class RealPlayer extends ICWarsPlayer {
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
+        this.gui.setPlayerSelectedUnit(this.selectedUnit);
         this.gui.draw(canvas);
     }
 
@@ -47,10 +48,6 @@ public class RealPlayer extends ICWarsPlayer {
         if (index < this.units.size()) {
             this.selectedUnit = this.units.get(index);
         }
-    }
-
-    public Unit getSelectedUnit() {
-        return selectedUnit;
     }
 
 /**

@@ -1,16 +1,21 @@
 package ch.epfl.cs107.play.game.icwars.gui;
 
 import ch.epfl.cs107.play.game.actor.Graphics;
+import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
-import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 
 public class ICWarsPlayerGUI implements Graphics {
     private ICWarsPlayer player;
+    private Unit playerSelectedUnit;
 
     public ICWarsPlayerGUI (float cameraScaleFactor, ICWarsPlayer player) {
         this.player = player;
+    }
+
+    public void setPlayerSelectedUnit (Unit selectedUnit) {
+        this.playerSelectedUnit = selectedUnit;
     }
     
     @Override
@@ -18,8 +23,8 @@ public class ICWarsPlayerGUI implements Graphics {
         int x = (int)this.player.getPosition().getX();
         int y = (int)this.player.getPosition().getY();
         DiscreteCoordinates coords = new DiscreteCoordinates(x, y);
-        if (((RealPlayer)this.player).getSelectedUnit() != null) {
-            ((RealPlayer)this.player).getSelectedUnit().drawRangeAndPathTo(coords, canvas);
+        if (this.playerSelectedUnit != null) {
+            this.playerSelectedUnit.drawRangeAndPathTo(coords, canvas);
         }
     }
 }
