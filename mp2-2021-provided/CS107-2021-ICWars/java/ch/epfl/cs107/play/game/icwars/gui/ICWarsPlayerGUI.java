@@ -23,8 +23,6 @@ public class ICWarsPlayerGUI implements Graphics {
         int x = (int)this.player.getPosition().getX();
         int y = (int)this.player.getPosition().getY();
         DiscreteCoordinates coords = new DiscreteCoordinates(x, y);
-        if (this.playerSelectedUnit != null) {
-            this.playerSelectedUnit.drawRangeAndPathTo(coords, canvas);
-        }
+        this.playerSelectedUnit.drawRangeAndPathTo(coords, canvas);
     }
 }

@@ -1,13 +1,16 @@
 package ch.epfl.cs107.play.game.icwars.actor.players;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.icwars.ICWars;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
+import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
@@ -19,46 +22,116 @@ public class RealPlayer extends ICWarsPlayer {
 
     public RealPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction, units);
-        if (faction.equals(Faction.ALLY)) this.name = "icwars/allyCursor";
-        else this.name = "icwars/enemyCursor";
+        if (faction.equals(Faction.ALLY))
+            this.name = "icwars/allyCursor";
+        else
+            this.name = "icwars/enemyCursor";
         sprite = new Sprite(this.name, 1.f, 1.f, this);
     }
 
     public void update(float deltaTime) {
-        Keyboard keyboard = getOwnerArea().getKeyboard();
-        
-        moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
-        moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
-        moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
-        moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
 
+        switch (this.currentState) {
+            case IDLE:
+                break;
+            case NORMAL:
+                move();
+                break;
+            case SELECT_CELL:
+                move();
+                break;
+            case MOVE_UNIT:
+                move();
+                break;
+            case ACTION_SELECTION:
+                break;
+            case ACTION:
+                break;
+            default:
+                break;
+        }
         super.update(deltaTime);
     }
 
     @Override
     public void draw(Canvas canvas) {
         super.draw(canvas);
-        this.gui.setPlayerSelectedUnit(this.selectedUnit);
-        this.gui.draw(canvas);
-    }
-
-    public void selectUnit(int index) {
-        if (index < this.units.size()) {
-            this.selectedUnit = this.units.get(index);
+        if (this.selectedUnit != null && this.currentState == State.MOVE_UNIT) {
+            this.gui.setPlayerSelectedUnit(this.selectedUnit);
+            this.gui.draw(canvas);
         }
     }
 
-/**
- * Orientate and Move this player in the given orientation if the given button is down
- * @param orientation (Orientation): given orientation, not null
- * @param b (Button): button corresponding to the given orientation, not null
- */
-	private void moveIfPressed(Orientation orientation, Button b){
-	    if(b.isDown()) {
-	        if (!isDisplacementOccurs()) {
-	            orientate(orientation);
-	            move(MOVE_DURATION);
+    // public void selectUnit(int index) {
+    // if (index < this.units.size()) {
+    // this.selectedUnit = this.units.get(index);
+    // }
+    // }
+
+    @Override
+    public void onLeaving(List<DiscreteCoordinates> coordinates) {
+        if (this.currentState == State.SELECT_CELL)
+            this.currentState = State.NORMAL;
+    }
+
+    /**
+     * Orientate and Move this player in the given orientation if the given button
+     * is down
+     * 
+     * @param orientation (Orientation): given orientation, not null
+     * @param b           (Button): button corresponding to the given orientation,
+     *                    not null
+     */
+    private void moveIfPressed(Orientation orientation, Button b) {
+        if (b.isDown()) {
+            if (!isDisplacementOccurs()) {
+                orientate(orientation);
+                move(MOVE_DURATION);
             }
-	    }
-	}
+        }
+    }
+
+    private void move() {
+        Keyboard keyboard = getOwnerArea().getKeyboard();
+
+        moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
+        moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
+        moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
+        moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
+    }
+
+    @Override
+    public List<DiscreteCoordinates> getFieldOfViewCells() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public boolean wantsCellInteraction() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    @Override
+    public boolean wantsViewInteraction() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
+    private class ICWarsPlayerInteractionHandler implements ICWarsInteractionVisitor {
+        @Override
+        public void interactWith(Unit other) {
+            if (RealPlayer.this.currentState == State.SELECT_CELL && other.getFaction() == Faction.ALLY) {
+                RealPlayer.this.selectedUnit = other;
+            }
+
+        }
+
+    }
+
+    @Override
+    public void interactWith(Interactable other) {
+        // TODO Auto-generated method stub
+
+    }
 }

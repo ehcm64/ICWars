@@ -11,7 +11,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class Unit extends ICWarsActor {
-    //TODO 2.2.1
+    // TODO 2.2.1
     protected float hp;
     protected float maxHp;
     protected String name;
@@ -29,12 +29,13 @@ public abstract class Unit extends ICWarsActor {
     }
 
     private void addAllNodes() {
-        int fromX = (int)getPosition().getX();
-        int fromY = (int)getPosition().getY();
+        int fromX = (int) getPosition().getX();
+        int fromY = (int) getPosition().getY();
         this.radius = getRadius();
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
-                if (x + fromX >= 0 && x + fromX <= getOwnerArea().getWidth() && y + fromY >= 0 && y + fromY <= getOwnerArea().getWidth()){
+                if (x + fromX >= 0 && x + fromX < getOwnerArea().getWidth() && y + fromY >= 0
+                        && y + fromY < getOwnerArea().getWidth()) {
                     DiscreteCoordinates coords = new DiscreteCoordinates(x + fromX, y + fromY);
                     boolean hasLeftEdge = x > -radius && x + fromX > 0;
                     boolean hasRightEdge = x < radius && x + fromX < getOwnerArea().getWidth();
@@ -74,27 +75,30 @@ public abstract class Unit extends ICWarsActor {
 
     /**
      * Draw the unit's range and a path from the unit position todestination
+     * 
      * @param destination path destination
-     * @param canvas canvas
+     * @param canvas      canvas
      */
-    public void drawRangeAndPathTo(DiscreteCoordinates destination , Canvas canvas) {
+    public void drawRangeAndPathTo(DiscreteCoordinates destination, Canvas canvas) {
         range.draw(canvas);
-        Queue <Orientation > path = range.shortestPath(getCurrentMainCellCoordinates(), destination);
-        //Draw path only if it exists (destination inside the range)
-        if (path != null){
+        Queue<Orientation> path = range.shortestPath(getCurrentMainCellCoordinates(), destination);
+        // Draw path only if it exists (destination inside the range)
+        if (path != null) {
             new Path(getCurrentMainCellCoordinates().toVector(), path).draw(canvas);
         }
     }
 
     public float takeDamage(int damage) {
         hp -= damage;
-        if (hp < 0) hp = 0;
+        if (hp < 0)
+            hp = 0;
         return hp;
     }
 
     public float repair(int heal) {
         hp += heal;
-        if (hp > maxHp) hp = maxHp;
+        if (hp > maxHp)
+            hp = maxHp;
         return hp;
     }
 
@@ -112,7 +116,7 @@ public abstract class Unit extends ICWarsActor {
 
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
-        //TODO Change Position INCOMPLETE
+        // TODO Change Position INCOMPLETE
         if (this.range.nodeExists(newPosition)) {
             super.changePosition(newPosition);
             this.setMoveState(true);
@@ -123,7 +127,7 @@ public abstract class Unit extends ICWarsActor {
             this.setMoveState(false);
             return false;
         }
-        
+
     }
 
     @Override

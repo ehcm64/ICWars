@@ -7,8 +7,8 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
 
 public abstract class ICWarsArea extends Area {
-	
-	private ICWarsBehavior behavior;
+
+    private ICWarsBehavior behavior;
 
     /**
      * Create the area by adding it all actors
@@ -25,14 +25,14 @@ public abstract class ICWarsArea extends Area {
     }
 
     public abstract DiscreteCoordinates getPlayerSpawnPosition();
-    
+
     /// Demo2Area implements Playable
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
         if (super.begin(window, fileSystem)) {
             // Set the behavior map
-        	behavior = new ICWarsBehavior(window, getTitle());
+            behavior = new ICWarsBehavior(window, getTitle());
             setBehavior(behavior);
             createArea();
             return true;
@@ -40,4 +40,3 @@ public abstract class ICWarsArea extends Area {
         return false;
     }
 }
-

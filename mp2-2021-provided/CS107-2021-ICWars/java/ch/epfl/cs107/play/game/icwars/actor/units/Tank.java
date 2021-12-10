@@ -13,10 +13,12 @@ public class Tank extends Unit {
         this.damage = 7;
         this.maxHp = 10;
         this.hp = this.maxHp;
-        if (faction.equals(Faction.ALLY)) this.name = "icwars/friendlyTank";
-        else this.name = "icwars/enemyTank";
+        if (faction.equals(Faction.ALLY))
+            this.name = "icwars/friendlyTank";
+        else
+            this.name = "icwars/enemyTank";
         sprite = new Sprite(this.name, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
-        //TODO Auto-generated constructor stub
+        // TODO Auto-generated constructor stub
     }
 
     @Override
@@ -28,5 +30,5 @@ public class Tank extends Unit {
     public float getDamage() {
         // TODO Auto-generated method stub
         return 0;
-    }    
+    }
 }

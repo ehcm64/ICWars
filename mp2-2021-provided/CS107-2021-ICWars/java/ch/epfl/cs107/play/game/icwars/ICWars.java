@@ -18,18 +18,19 @@ import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
 public class ICWars extends AreaGame {
-	
+	// TODO REORGANISE UNIT AND PLAYER MANAGEMENT WHEN CHANGING LEVEL
 	public final static float CAMERA_SCALE_FACTOR = 10.f;
 
 	private RealPlayer player;
 	private ArrayList<Unit> playerUnits = new ArrayList<Unit>();
-	private final String[] areas = {"icwars/Level0", "icwars/Level1"};
-	
+	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
+
 	private int areaIndex;
+
 	/**
 	 * Add all the areas
 	 */
-	private void createAreas(){
+	private void createAreas() {
 		addArea(new Level0());
 		addArea(new Level1());
 	}
@@ -46,13 +47,13 @@ public class ICWars extends AreaGame {
 		}
 		return false;
 	}
-	
+
 	private void initArea(String areaKey) {
-		 
-		ICWarsArea area = (ICWarsArea)setCurrentArea(areaKey, true);
+
+		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
 		DiscreteCoordinates coords = area.getPlayerSpawnPosition();
 		Soldat soldat = new Soldat(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
-	    Tank tank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
+		Tank tank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
 		this.playerUnits.add(soldat);
 		this.playerUnits.add(tank);
 		this.player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
@@ -67,7 +68,7 @@ public class ICWars extends AreaGame {
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
 			reset();
 		} else if (keyboard.get(Keyboard.U).isReleased()) {
-			player.selectUnit(1);
+			// player.selectUnit(1);
 		}
 		super.update(deltaTime);
 	}
@@ -99,11 +100,11 @@ public class ICWars extends AreaGame {
 		if (areaIndex != maxAreaIndex) {
 			areaIndex += 1;
 			player.leaveArea();
-		    ICWarsArea currentArea = (ICWarsArea)setCurrentArea(areas[areaIndex], false);
-		    player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], false);
+			player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
 		} else {
 			end();
 		}
-		
+
 	}
 }
