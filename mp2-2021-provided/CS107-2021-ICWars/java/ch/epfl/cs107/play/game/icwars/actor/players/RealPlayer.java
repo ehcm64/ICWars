@@ -3,10 +3,13 @@ package ch.epfl.cs107.play.game.icwars.actor.players;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sql.rowset.serial.SerialArray;
+
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
+import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.ICWars;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
@@ -19,14 +22,17 @@ import ch.epfl.cs107.play.window.Keyboard;
 public class RealPlayer extends ICWarsPlayer {
     private ICWarsPlayerGUI gui = new ICWarsPlayerGUI(ICWars.CAMERA_SCALE_FACTOR, this);
     private final static int MOVE_DURATION = 8;
+    private final ICWarsPlayerInteractionHandler handler;
 
     public RealPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction, units);
+        this.handler = new ICWarsPlayerInteractionHandler();
         if (faction.equals(Faction.ALLY))
             this.name = "icwars/allyCursor";
         else
             this.name = "icwars/enemyCursor";
         sprite = new Sprite(this.name, 1.f, 1.f, this);
+
     }
 
     public void update(float deltaTime) {
@@ -61,12 +67,6 @@ public class RealPlayer extends ICWarsPlayer {
             this.gui.draw(canvas);
         }
     }
-
-    // public void selectUnit(int index) {
-    // if (index < this.units.size()) {
-    // this.selectedUnit = this.units.get(index);
-    // }
-    // }
 
     @Override
     public void onLeaving(List<DiscreteCoordinates> coordinates) {
@@ -118,20 +118,36 @@ public class RealPlayer extends ICWarsPlayer {
         return false;
     }
 
+    public State getState() {
+        return this.currentState;
+    }
+
+    public void selectUnit(int index) {
+        this.selectedUnit = units.get(index);
+    }
+
     private class ICWarsPlayerInteractionHandler implements ICWarsInteractionVisitor {
+
         @Override
         public void interactWith(Unit other) {
-            if (RealPlayer.this.currentState == State.SELECT_CELL && other.getFaction() == Faction.ALLY) {
-                RealPlayer.this.selectedUnit = other;
-            }
+            System.out.print("non");
 
+        }
+
+        @Override
+        public void interactWith(RealPlayer other) {
+            System.out.print("oui");
         }
 
     }
 
     @Override
     public void interactWith(Interactable other) {
-        // TODO Auto-generated method stub
+        other.acceptInteraction(handler);
+    }
 
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor v) {
+        ((ICWarsInteractionVisitor) v).interactWith(this);
     }
 }

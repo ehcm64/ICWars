@@ -67,15 +67,30 @@ public class ICWars extends AreaGame {
 			nextLevel();
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
 			reset();
-		} else if (keyboard.get(Keyboard.U).isReleased()) {
+		} else if (keyboard.get(Keyboard.ENTER).isReleased()) {
 			// player.selectUnit(1);
+			for (Unit unit : playerUnits) {
+
+				if ((int) unit.getPosition().getX() == (int) player.getPosition().getX()
+						&& (int) unit.getPosition().getY() == (int) player.getPosition().getY()) {
+					player.interactWith(unit);
+
+				} else {
+					player.onLeaving(player.getCurrentCells());
+				}
+
+			}
+
 		}
 		super.update(deltaTime);
 	}
 
 	private void reset() {
 		// BUG : garde une ancienne unité aprés qu'elle ait bougé
-		createAreas();
+		System.out.println(playerUnits.size());
+		while (playerUnits.size() > 0) {
+			playerUnits.remove(0);
+		}
 		areaIndex = 0;
 		initArea(areas[areaIndex]);
 		this.player.startTurn();
