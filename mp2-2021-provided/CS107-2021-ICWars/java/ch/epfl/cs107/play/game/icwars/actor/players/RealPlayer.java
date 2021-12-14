@@ -64,14 +64,14 @@ public class RealPlayer extends ICWarsPlayer {
                 if (keyboard.get(Keyboard.ENTER).isReleased()) {
                     DiscreteCoordinates playerCoords = new DiscreteCoordinates((int) this.getPosition().getX(),
                             (int) this.getPosition().getY());
-                if (!this.selectedUnit.getMoveState()) {
-                    this.selectedUnit.changePosition(playerCoords);
-                    this.selectedUnit.setMoveState(true);
+                    if (!this.selectedUnit.getMoveState()) {
+                        this.selectedUnit.changePosition(playerCoords);
+                        this.selectedUnit.setMoveState(true);
+                    }
                     this.selectedUnit = null;
+                    this.currentState = State.NORMAL;
                 }
-                this.currentState = State.NORMAL;
-            }
-            moveIfPressed();
+                moveIfPressed();
                 break;
             case ACTION_SELECTION:
                 break;
