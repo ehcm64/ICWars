@@ -19,7 +19,11 @@ public class Level1 extends ICWarsArea {
 	}
 	
 	protected void createArea() {
-		// Base
 		registerActor(new Background(this));
+	}
+
+	@Override
+	public DiscreteCoordinates getEnemySpawnPosition() {
+		return new DiscreteCoordinates(15, 5);
 	}
 }

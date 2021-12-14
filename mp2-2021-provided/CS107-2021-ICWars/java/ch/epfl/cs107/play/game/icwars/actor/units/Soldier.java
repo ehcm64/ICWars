@@ -6,9 +6,9 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 
-public class Soldat extends Unit {
+public class Soldier extends Unit {
 
-    public Soldat(Area area, DiscreteCoordinates position, Faction faction) {
+    public Soldier(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
         this.radius = 2;
         this.damage = 2;

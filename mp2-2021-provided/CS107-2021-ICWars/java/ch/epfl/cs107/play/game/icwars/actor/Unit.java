@@ -146,7 +146,6 @@ public abstract class Unit extends ICWarsActor {
 
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
-        System.out.println(v.getClass());
         ((ICWarsInteractionVisitor) v).interactWith(this);
     }
 }

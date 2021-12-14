@@ -6,8 +6,9 @@ import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
+import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
-import ch.epfl.cs107.play.game.icwars.actor.units.Soldat;
+import ch.epfl.cs107.play.game.icwars.actor.units.Soldier;
 import ch.epfl.cs107.play.game.icwars.actor.units.Tank;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.Level0;
@@ -21,7 +22,7 @@ public class ICWars extends AreaGame {
 	// TODO REORGANISE UNIT AND PLAYER MANAGEMENT WHEN CHANGING LEVEL
 	public final static float CAMERA_SCALE_FACTOR = 10.f;
 
-	private RealPlayer player;
+	private ArrayList<ICWarsPlayer> playerList = new ArrayList<ICWarsPlayer>();
 	private ArrayList<Unit> playerUnits = new ArrayList<Unit>();
 	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
 
@@ -52,14 +53,12 @@ public class ICWars extends AreaGame {
 
 		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
 		DiscreteCoordinates coords = area.getPlayerSpawnPosition();
-		Soldat soldat = new Soldat(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
-		Tank tank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
-		this.playerUnits.add(soldat);
-		this.playerUnits.add(tank);
+		Soldier allySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
+		Tank allyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
+		this.playerUnits.add(allySoldier);
+		this.playerUnits.add(allyTank);
 		this.player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
-		while (this.playerUnits.size() > 0) {
-			this.playerUnits.remove(0);
-		}
+		this.playerUnits = new ArrayList<Unit>();
 		this.player.enterArea(area, coords);
 	}
 
@@ -70,7 +69,7 @@ public class ICWars extends AreaGame {
 			nextLevel();
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
 			reset();
-		} 
+		}
 		super.update(deltaTime);
 	}
 
@@ -80,10 +79,6 @@ public class ICWars extends AreaGame {
 		areaIndex = 0;
 		initArea(areas[areaIndex]);
 		this.player.startTurn();
-	}
-
-	private Area getOwnerArea() {
-		return null;
 	}
 
 	@Override
