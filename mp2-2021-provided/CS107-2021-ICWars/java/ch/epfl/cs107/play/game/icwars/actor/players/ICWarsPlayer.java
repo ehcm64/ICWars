@@ -33,9 +33,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         super(area, position, faction);
         this.selectedUnit = null;
         this.currentState = State.IDLE;
-        for (Unit unit : units) {
-            this.units.add(unit);
-        }
+        addAllUnits(units);
     }
 
     public void startTurn() {
@@ -53,6 +51,12 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
 
     public void removeUnit(Unit unit) {
         this.units.remove(unit);
+    }
+
+    public void addAllUnits(ArrayList<Unit> units) {
+        for (Unit unit : units) {
+            this.units.add(unit);
+        }
     }
 
     public void removeAllUnits() {
