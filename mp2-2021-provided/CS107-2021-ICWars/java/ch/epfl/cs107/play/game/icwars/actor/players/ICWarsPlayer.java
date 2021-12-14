@@ -39,42 +39,6 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         }
     }
 
-    protected void updateState() {
-        Keyboard keyboard = getOwnerArea().getKeyboard();
-        switch (this.currentState) {
-            case IDLE:
-                break;
-            case NORMAL:
-                if (keyboard.get(Keyboard.ENTER).isReleased())
-                    this.currentState = State.SELECT_CELL;
-                else if (keyboard.get(Keyboard.TAB).isReleased())
-                    this.currentState = State.IDLE;
-                break;
-            case SELECT_CELL:
-                if (this.selectedUnit != null)
-                    this.currentState = State.MOVE_UNIT;
-                // si jouer quitte une cellule --
-                break;
-            case MOVE_UNIT:
-                if (keyboard.get(Keyboard.ENTER).isReleased()) {
-                    DiscreteCoordinates playerCoords = new DiscreteCoordinates((int) this.getPosition().getX(),
-                            (int) this.getPosition().getY());
-                    if (!this.selectedUnit.getMoveState()) {
-                        this.selectedUnit.changePosition(playerCoords);
-                        this.selectedUnit = null;
-                    }
-                    this.currentState = State.NORMAL;
-                }
-                break;
-            case ACTION_SELECTION:
-                break;
-            case ACTION:
-                break;
-            default:
-                break;
-        }
-    }
-
     public void startTurn() {
         this.currentState = State.NORMAL;
         centerCamera();
@@ -84,6 +48,25 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         }
     }
 
+    public void addUnit(Unit unit) {
+        this.units.add(unit);
+    }
+
+    public void removeUnit(Unit unit) {
+        this.units.remove(unit);
+    }
+
+    public void removeAllUnits() {
+        for (Unit unit : this.units) {
+            this.units.remove(unit);
+        }
+    }
+
+     // TODO Intrusive getter ?
+    public ArrayList<Unit> getUnits() {
+        return this.units;
+    }
+
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
@@ -91,19 +74,22 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
 
     @Override
     public void update(float deltaTime) {
+        removeDeadUnits();
+        super.update(deltaTime);
+    }
+
+    private void removeDeadUnits() {
         ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
         for (Unit unit : this.units) {
             if (unit.getHp() == 0)
                 unitsToRemove.add(unit);
-        }
-        if (unitsToRemove.size() != 0) {
-            for (Unit unit : unitsToRemove) {
-                this.units.remove(unit);
+            }
+            if (unitsToRemove.size() != 0) {
+                for (Unit unit : unitsToRemove) {
+                    this.units.remove(unit);
+                }
             }
         }
-        updateState();
-        super.update(deltaTime);
-    }
 
     public void centerCamera() {
         getOwnerArea().setViewCandidate(this);
@@ -156,5 +142,4 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ICWarsInteractionVisitor) v).interactWith(this);
     }
-
 }
