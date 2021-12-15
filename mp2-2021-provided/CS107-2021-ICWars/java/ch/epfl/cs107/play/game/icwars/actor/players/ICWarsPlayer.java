@@ -65,7 +65,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         }
     }
 
-     // TODO Intrusive getter ?
+    // TODO Intrusive getter ?
     public ArrayList<Unit> getUnits() {
         return this.units;
     }
@@ -86,13 +86,13 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         for (Unit unit : this.units) {
             if (unit.getHp() == 0)
                 unitsToRemove.add(unit);
-            }
-            if (unitsToRemove.size() != 0) {
-                for (Unit unit : unitsToRemove) {
-                    this.units.remove(unit);
-                }
+        }
+        if (unitsToRemove.size() != 0) {
+            for (Unit unit : unitsToRemove) {
+                this.units.remove(unit);
             }
         }
+    }
 
     public void centerCamera() {
         getOwnerArea().setViewCandidate(this);

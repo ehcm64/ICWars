@@ -67,7 +67,7 @@ public class RealPlayer extends ICWarsPlayer {
                     if (!this.selectedUnit.getMoveState() && !this.selectedUnit.getPosition().toDiscreteCoordinates()
                             .equals(this.getPosition().toDiscreteCoordinates())) {
                         this.selectedUnit.changePosition(playerCoords);
-                        this.selectedUnit.setMoveState(true);
+
                     }
                     this.selectedUnit = null;
                     this.currentState = State.NORMAL;

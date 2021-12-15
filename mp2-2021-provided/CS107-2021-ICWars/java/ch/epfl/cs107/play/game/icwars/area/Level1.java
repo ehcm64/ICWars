@@ -7,17 +7,17 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
  * Specific area
  */
 public class Level1 extends ICWarsArea {
-	
+
 	@Override
 	public String getTitle() {
 		return "icwars/Level1";
 	}
-	
+
 	@Override
 	public DiscreteCoordinates getPlayerSpawnPosition() {
-		return new DiscreteCoordinates(2,5);
+		return new DiscreteCoordinates(2, 5);
 	}
-	
+
 	protected void createArea() {
 		registerActor(new Background(this));
 	}
@@ -25,5 +25,13 @@ public class Level1 extends ICWarsArea {
 	@Override
 	public DiscreteCoordinates getEnemySpawnPosition() {
 		return new DiscreteCoordinates(15, 5);
+	}
+
+	public int getNbOfSoldier() {
+		return (int) 1;
+	}
+
+	public int getNbOfTank() {
+		return (int) 1;
 	}
 }

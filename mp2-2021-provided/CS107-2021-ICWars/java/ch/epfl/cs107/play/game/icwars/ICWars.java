@@ -23,7 +23,10 @@ public class ICWars extends AreaGame {
 	public final static float CAMERA_SCALE_FACTOR = 10.f;
 
 	private ArrayList<ICWarsPlayer> playerList = new ArrayList<ICWarsPlayer>();
-	private ArrayList<Unit> playerUnits = new ArrayList<Unit>();
+	private ArrayList<Unit> allyUnits = new ArrayList<Unit>();
+	private ArrayList<Unit> enemyUnits = new ArrayList<Unit>();
+	private RealPlayer allyPlayer;
+	private RealPlayer enemyPlayer;
 	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
 
 	private int areaIndex;
@@ -43,7 +46,7 @@ public class ICWars extends AreaGame {
 			createAreas();
 			areaIndex = 0;
 			initArea(areas[areaIndex]);
-			this.player.startTurn();
+			this.allyPlayer.startTurn();
 			return true;
 		}
 		return false;
@@ -52,14 +55,28 @@ public class ICWars extends AreaGame {
 	private void initArea(String areaKey) {
 
 		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
-		DiscreteCoordinates coords = area.getPlayerSpawnPosition();
+		DiscreteCoordinates allyCoords = area.getPlayerSpawnPosition();
+		DiscreteCoordinates enemyCoords = area.getEnemySpawnPosition();
+
 		Soldier allySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
 		Tank allyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
-		this.playerUnits.add(allySoldier);
-		this.playerUnits.add(allyTank);
-		this.player = new RealPlayer(area, coords, Faction.ALLY, playerUnits);
-		this.playerUnits = new ArrayList<Unit>();
-		this.player.enterArea(area, coords);
+		this.allyUnits.add(allySoldier);
+		this.allyUnits.add(allyTank);
+
+		Soldier enemySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(9, 5), Faction.ENEMY);
+		Tank enemyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(8, 5), Faction.ENEMY);
+		this.enemyUnits.add(enemySoldier);
+		this.enemyUnits.add(enemyTank);
+
+		this.enemyPlayer = new RealPlayer(area, enemyCoords, Faction.ENEMY, enemyUnits);
+		this.allyPlayer = new RealPlayer(area, allyCoords, Faction.ALLY, allyUnits);
+		this.playerList.add(allyPlayer);
+		this.playerList.add(enemyPlayer);
+		this.allyUnits = new ArrayList<Unit>();
+		this.enemyUnits = new ArrayList<Unit>();
+
+		this.enemyPlayer.enterArea(area, enemyCoords);
+		this.allyPlayer.enterArea(area, allyCoords);
 	}
 
 	@Override
@@ -75,10 +92,10 @@ public class ICWars extends AreaGame {
 
 	private void reset() {
 		// BUG : garde une ancienne unité aprés qu'elle ait bougé
-		this.player.leaveArea();
+		this.allyPlayer.leaveArea();
 		areaIndex = 0;
 		initArea(areas[areaIndex]);
-		this.player.startTurn();
+		this.allyPlayer.startTurn();
 	}
 
 	@Override
@@ -95,12 +112,13 @@ public class ICWars extends AreaGame {
 		int maxAreaIndex = areas.length - 1;
 		if (areaIndex != maxAreaIndex) {
 			areaIndex += 1;
-			player.leaveArea();
+			allyPlayer.leaveArea();
 			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], false);
-			player.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+			allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
 		} else {
 			end();
 		}
 
 	}
+
 }

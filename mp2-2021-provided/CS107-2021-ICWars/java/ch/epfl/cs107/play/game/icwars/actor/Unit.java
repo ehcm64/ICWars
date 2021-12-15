@@ -119,11 +119,11 @@ public abstract class Unit extends ICWarsActor {
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
         // TODO Change Position INCOMPLETE
-        if (this.range.nodeExists(newPosition)) {
-            super.changePosition(newPosition);
+        if (this.range.nodeExists(newPosition) && super.changePosition(newPosition)) {
             this.setMoveState(true);
             this.range = new ICWarsRange();
             this.addAllNodes();
+
             return true;
         } else {
             this.setMoveState(false);
