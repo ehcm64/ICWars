@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.stream.Collector.Characteristics;
 
 import ch.epfl.cs107.play.game.areagame.AreaGame;
-import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Soldier;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
+import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.Level0;
 import ch.epfl.cs107.play.game.icwars.area.Level1;
@@ -42,7 +42,6 @@ public class ICWars extends AreaGame {
 		END_PLAYER_TURN,
 		END_TURN,
 		END;
-
 	}
 
 	/**
@@ -163,7 +162,6 @@ public class ICWars extends AreaGame {
 			nextLevel();
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
 			currentGameState = GameState.INIT;
-
 		}
 		super.update(deltaTime);
 	}

@@ -1,5 +1,6 @@
-package ch.epfl.cs107.play.game.icwars.actor;
+package ch.epfl.cs107.play.game.icwars.actor.unit;
 
+import java.util.ArrayList;
 import java.util.Queue;
 
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
@@ -8,12 +9,13 @@ import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Path;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
+import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class Unit extends ICWarsActor {
-    // TODO 2.2.1
     protected float hp;
     protected float maxHp;
     protected String name;
@@ -23,11 +25,14 @@ public abstract class Unit extends ICWarsActor {
     protected ICWarsRange range;
     protected boolean hasAttacked;
     protected boolean hasMoved;
+    protected int cellDefStars;
+    protected ArrayList<Action> actions;
 
     public Unit(Area area, DiscreteCoordinates position, Faction faction) {
         super(area, position, faction);
         this.range = new ICWarsRange();
         addAllNodes();
+        this.actions = new ArrayList<Action>();
     }
 
     private void addAllNodes() {
@@ -79,6 +84,10 @@ public abstract class Unit extends ICWarsActor {
         return this.hasAttacked;
     }
 
+    public ArrayList<Action> getActions() {
+        return this.actions;
+    }
+
     /**
      * Draw the unit's range and a path from the unit position todestination
      * 
@@ -95,7 +104,7 @@ public abstract class Unit extends ICWarsActor {
     }
 
     public float takeDamage(int damage) {
-        hp -= damage;
+        hp = hp - damage + this.cellDefStars;
         if (hp < 0)
             hp = 0;
         return hp;
@@ -108,12 +117,11 @@ public abstract class Unit extends ICWarsActor {
         return hp;
     }
 
-    public abstract float getDamage();
+    public abstract int getDamage();
 
     @Override
     public void draw(Canvas canvas) {
-
-        if (hasMoved) {
+        if (this.hasMoved) {
             sprite.setAlpha(0.5f);
         } else {
             sprite.setAlpha(1.f);
@@ -143,13 +151,11 @@ public abstract class Unit extends ICWarsActor {
 
     @Override
     public boolean isCellInteractable() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean isViewInteractable() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -157,5 +163,4 @@ public abstract class Unit extends ICWarsActor {
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ICWarsInteractionVisitor) v).interactWith(this);
     }
-
 }

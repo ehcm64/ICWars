@@ -8,7 +8,8 @@ import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
 import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.icwars.ICWars;
-import ch.epfl.cs107.play.game.icwars.actor.Unit;
+import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -21,6 +22,7 @@ public class RealPlayer extends ICWarsPlayer {
     private ICWarsPlayerGUI gui = new ICWarsPlayerGUI(ICWars.CAMERA_SCALE_FACTOR, this);
     private final static int MOVE_DURATION = 8;
     private final ICWarsPlayerInteractionHandler handler;
+    private Action act;
 
     public RealPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction, units);
@@ -36,8 +38,8 @@ public class RealPlayer extends ICWarsPlayer {
         } else if (faction.equals(Faction.ENEMY)) {
             this.name = "icwars/enemyCursor";
         }
-
         sprite = new Sprite(this.name, spriteSize, spriteSize, this, null, anchor);
+        this.act = null;
     }
 
     public void update(float deltaTime) {
@@ -83,8 +85,16 @@ public class RealPlayer extends ICWarsPlayer {
                 moveIfPressed();
                 break;
             case ACTION_SELECTION:
+            ArrayList<Action> selectedUnitActions = this.selectedUnit.getActions();
+                for (Action action : selectedUnitActions) {
+                    if (keyboard.get(action.getKey()).isReleased()) {
+                        this.currentState = State.ACTION;
+                        this.act = action;
+                    }
+                }
                 break;
             case ACTION:
+                this.act.doAction(deltaTime, this, keyboard);
                 break;
             default:
                 break;
@@ -95,13 +105,10 @@ public class RealPlayer extends ICWarsPlayer {
     @Override
     public void draw(Canvas canvas) {
         if (this.currentState != State.IDLE) {
-            if (this.selectedUnit != null && this.currentState == State.MOVE_UNIT) {
-                this.gui.setPlayerSelectedUnit(selectedUnit);
-                this.gui.draw(canvas);
-            }
+            this.gui.setPlayerSelectedUnit(selectedUnit);
+            this.gui.draw(canvas);
             super.draw(canvas);
         }
-
     }
 
     @Override

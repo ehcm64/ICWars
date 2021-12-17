@@ -1,7 +1,13 @@
 package ch.epfl.cs107.play.game.icwars.area;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import ch.epfl.cs107.play.game.actor.Actor;
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.icwars.ICWars;
+import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
@@ -40,5 +46,21 @@ public abstract class ICWarsArea extends Area {
             return true;
         }
         return false;
+    }
+
+    public ArrayList<Unit> findCloseUnits(DiscreteCoordinates coords, int range) {
+        ArrayList<Unit> unitsInRange = new ArrayList<Unit>();
+        int xPos = coords.x;
+        int yPos = coords.y;
+        for (Actor actor : this.getActors()) {
+            if (actor instanceof Unit) {
+                int x = (int) actor.getPosition().getX();
+                int y = (int) actor.getPosition().getY();
+                if (Math.abs(xPos -x) <= range && Math.abs(yPos - y) <= range) {
+                    unitsInRange.add((Unit)actor);
+                }
+            }
+        }
+        return unitsInRange;
     }
 }

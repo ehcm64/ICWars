@@ -36,6 +36,15 @@ public class ICWarsBehavior extends AreaBehavior {
 			System.out.println(type);
 			return NONE;
 		}
+
+		public int getDefenseStar() {
+			return this.defStars;
+		}
+
+        public String typeToString() {
+			//TODO TEMPORARY TEST
+            return "TEST";
+        }
 	}
 
 	/**

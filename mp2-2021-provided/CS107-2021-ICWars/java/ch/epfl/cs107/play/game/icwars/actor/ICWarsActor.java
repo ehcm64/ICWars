@@ -50,4 +50,7 @@ public abstract class ICWarsActor extends MovableAreaEntity {
     public void acceptInteraction(AreaInteractionVisitor v) {
     }
 
+    public void centerCamera() {
+        getOwnerArea().setViewCandidate(this);
+    }
 }
