@@ -2,7 +2,6 @@ package ch.epfl.cs107.play.game.icwars;
 
 import java.util.ArrayList;
 
-import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
@@ -25,11 +24,21 @@ public class ICWars extends AreaGame {
 	private ArrayList<ICWarsPlayer> playerList = new ArrayList<ICWarsPlayer>();
 	private ArrayList<Unit> allyUnits = new ArrayList<Unit>();
 	private ArrayList<Unit> enemyUnits = new ArrayList<Unit>();
+	private ArrayList<ICWarsPlayer> waitingForTurn = new ArrayList<ICWarsPlayer>();
+	private ArrayList<ICWarsPlayer> waitingForNextTurn = new ArrayList<ICWarsPlayer>();
+	private ICWarsPlayer currentPlayer;
 	private RealPlayer allyPlayer;
 	private RealPlayer enemyPlayer;
 	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
 
 	private int areaIndex;
+
+	public enum GameState{
+		INIT,
+		CHOOSE_PLAYER;
+		
+
+	}
 
 	/**
 	 * Add all the areas
@@ -72,6 +81,7 @@ public class ICWars extends AreaGame {
 		this.allyPlayer = new RealPlayer(area, allyCoords, Faction.ALLY, allyUnits);
 		this.playerList.add(allyPlayer);
 		this.playerList.add(enemyPlayer);
+		// player and enemy have their units so these lists are now useless so we reset them to avoid graphical bugs
 		this.allyUnits = new ArrayList<Unit>();
 		this.enemyUnits = new ArrayList<Unit>();
 
