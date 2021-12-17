@@ -45,6 +45,18 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         }
     }
 
+    public void nextTurn() {
+        if (this.faction != Faction.ALLY) {
+            this.currentState = State.NORMAL;
+            centerCamera();
+            for (Unit unit : this.units) {
+                unit.setMoveState(false);
+                unit.setAttackState(false);
+            }
+        }
+
+    }
+
     public void addUnit(Unit unit) {
         this.units.add(unit);
     }
@@ -105,8 +117,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         area.registerActor(this);
         setOwnerArea(area);
         setCurrentPosition(position.toVector());
-        centerCamera();
-        resetMotion();
+
     }
 
     @Override

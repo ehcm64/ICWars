@@ -3,6 +3,7 @@ package ch.epfl.cs107.play.game.icwars.actor.players;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.epfl.cs107.play.game.icwars.actor.units.Tank;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
@@ -13,6 +14,7 @@ import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Button;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
@@ -25,24 +27,36 @@ public class RealPlayer extends ICWarsPlayer {
     public RealPlayer(Area area, DiscreteCoordinates position, Faction faction, ArrayList<Unit> units) {
         super(area, position, faction, units);
         this.handler = new ICWarsPlayerInteractionHandler();
-        if (faction.equals(Faction.ALLY))
+        float spriteSize = 1.f;
+        Vector anchor = Vector.ZERO;
+        if (faction.equals(Faction.ALLY)) {
             this.name = "icwars/allyCursor";
-        else
+        } else if (faction.equals(Faction.GAMEOVER)) {
+            spriteSize = 6.f;
+            anchor = new Vector(-2.5f, -2.5f);
+            this.name = "icwars/GameOver";
+        } else if (faction.equals(Faction.ENEMY)) {
             this.name = "icwars/enemyCursor";
-        sprite = new Sprite(this.name, 1.f, 1.f, this);
+        }
+
+        sprite = new Sprite(this.name, spriteSize, spriteSize, this, null, anchor);
 
     }
 
     public void update(float deltaTime) {
+
         Keyboard keyboard = getOwnerArea().getKeyboard();
         switch (this.currentState) {
             case IDLE:
                 break;
             case NORMAL:
+                this.centerCamera();
                 if (keyboard.get(Keyboard.ENTER).isReleased()) {
                     this.currentState = State.SELECT_CELL;
                 } else if (keyboard.get(Keyboard.TAB).isReleased()) {
                     this.currentState = State.IDLE;
+                    nextTurn();
+
                 } else {
                     moveIfPressed();
                 }
@@ -86,11 +100,14 @@ public class RealPlayer extends ICWarsPlayer {
 
     @Override
     public void draw(Canvas canvas) {
-        super.draw(canvas);
-        if (this.selectedUnit != null && this.currentState == State.MOVE_UNIT) {
-            this.gui.setPlayerSelectedUnit(selectedUnit);
-            this.gui.draw(canvas);
+        if (this.currentState != State.IDLE) {
+            if (this.selectedUnit != null && this.currentState == State.MOVE_UNIT) {
+                this.gui.setPlayerSelectedUnit(selectedUnit);
+                this.gui.draw(canvas);
+            }
+            super.draw(canvas);
         }
+
     }
 
     @Override

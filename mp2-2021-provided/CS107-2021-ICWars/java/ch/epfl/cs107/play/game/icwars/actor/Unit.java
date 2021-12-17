@@ -108,6 +108,9 @@ public abstract class Unit extends ICWarsActor {
 
     @Override
     public void draw(Canvas canvas) {
+
+        if (hasMoved)
+            sprite.setAlpha(0.5f);
         sprite.draw(canvas);
     }
 
@@ -120,13 +123,12 @@ public abstract class Unit extends ICWarsActor {
     public boolean changePosition(DiscreteCoordinates newPosition) {
         // TODO Change Position INCOMPLETE
         if (this.range.nodeExists(newPosition) && super.changePosition(newPosition)) {
-            this.setMoveState(true);
+            this.hasMoved = true;
             this.range = new ICWarsRange();
             this.addAllNodes();
-
             return true;
         } else {
-            this.setMoveState(false);
+            this.hasMoved = false;
             return false;
         }
 
@@ -148,4 +150,5 @@ public abstract class Unit extends ICWarsActor {
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ICWarsInteractionVisitor) v).interactWith(this);
     }
+
 }

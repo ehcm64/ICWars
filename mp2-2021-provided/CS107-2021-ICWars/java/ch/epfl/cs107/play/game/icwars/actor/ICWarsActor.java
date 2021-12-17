@@ -16,7 +16,8 @@ public abstract class ICWarsActor extends MovableAreaEntity {
 
     public enum Faction {
         ALLY,
-        ENEMY;
+        ENEMY,
+        GAMEOVER;
 
     }
 

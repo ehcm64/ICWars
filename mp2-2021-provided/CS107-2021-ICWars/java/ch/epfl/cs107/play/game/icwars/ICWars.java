@@ -25,10 +25,10 @@ public class ICWars extends AreaGame {
 	private ArrayList<ICWarsPlayer> playerList = new ArrayList<ICWarsPlayer>();
 	private ArrayList<Unit> allyUnits = new ArrayList<Unit>();
 	private ArrayList<Unit> enemyUnits = new ArrayList<Unit>();
+	private ArrayList<Unit> unitsInQueue = new ArrayList<Unit>();
 	private RealPlayer allyPlayer;
 	private RealPlayer enemyPlayer;
 	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
-
 	private int areaIndex;
 
 	/**
@@ -77,10 +77,23 @@ public class ICWars extends AreaGame {
 
 		this.enemyPlayer.enterArea(area, enemyCoords);
 		this.allyPlayer.enterArea(area, allyCoords);
+
+	}
+
+	public enum GameState {
+		INIT,
+		CHOOSE_PLAYER,
+		START_PLAYER_TURN,
+		PLAYER_TURN,
+		END_PLAYER_TURN,
+		END_TURN,
+		END;
+
 	}
 
 	@Override
 	public void update(float deltaTime) {
+
 		Keyboard keyboard = getCurrentArea().getKeyboard();
 		if (keyboard.get(Keyboard.N).isReleased()) {
 			nextLevel();
@@ -96,11 +109,22 @@ public class ICWars extends AreaGame {
 		areaIndex = 0;
 		initArea(areas[areaIndex]);
 		this.allyPlayer.startTurn();
+
 	}
 
 	@Override
 	public void end() {
+
 		System.out.println("GAME OVER");
+		ArrayList<Unit> uni = new ArrayList<Unit>();
+		ICWarsArea area = (ICWarsArea) getCurrentArea();
+		DiscreteCoordinates position = this.allyPlayer.getPosition().toDiscreteCoordinates();
+
+		this.allyPlayer.leaveArea();
+		System.out.print(area + " " + position);
+		RealPlayer gameEnd = new RealPlayer(area, position, Faction.GAMEOVER, uni);
+		gameEnd.enterArea(area, position);
+		gameEnd.startTurn();
 	}
 
 	@Override
@@ -109,12 +133,12 @@ public class ICWars extends AreaGame {
 	}
 
 	protected void nextLevel() {
-		int maxAreaIndex = areas.length - 1;
-		if (areaIndex != maxAreaIndex) {
-			areaIndex += 1;
+		areaIndex += 1;
+		if (areaIndex < areas.length) {
 			allyPlayer.leaveArea();
 			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], false);
 			allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+
 		} else {
 			end();
 		}
