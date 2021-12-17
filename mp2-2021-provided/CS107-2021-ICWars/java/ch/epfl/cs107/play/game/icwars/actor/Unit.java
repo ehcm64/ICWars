@@ -51,6 +51,10 @@ public abstract class Unit extends ICWarsActor {
 
     public abstract int getRadius();
 
+    public Sprite getSprite() {
+        return this.sprite;
+    }
+
     public String getName() {
         return name;
     }
@@ -109,8 +113,11 @@ public abstract class Unit extends ICWarsActor {
     @Override
     public void draw(Canvas canvas) {
 
-        if (hasMoved)
+        if (hasMoved) {
             sprite.setAlpha(0.5f);
+        } else {
+            sprite.setAlpha(1.f);
+        }
         sprite.draw(canvas);
     }
 
@@ -121,7 +128,7 @@ public abstract class Unit extends ICWarsActor {
 
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
-        // TODO Change Position INCOMPLETE
+        // TODO Change Position INCOMPLETE ?
         if (this.range.nodeExists(newPosition) && super.changePosition(newPosition)) {
             this.hasMoved = true;
             this.range = new ICWarsRange();

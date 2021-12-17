@@ -3,7 +3,6 @@ package ch.epfl.cs107.play.game.icwars.actor.players;
 import java.util.ArrayList;
 import java.util.List;
 
-import ch.epfl.cs107.play.game.icwars.actor.units.Tank;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.areagame.actor.Orientation;
@@ -39,7 +38,6 @@ public class RealPlayer extends ICWarsPlayer {
         }
 
         sprite = new Sprite(this.name, spriteSize, spriteSize, this, null, anchor);
-
     }
 
     public void update(float deltaTime) {
@@ -54,8 +52,6 @@ public class RealPlayer extends ICWarsPlayer {
                     this.currentState = State.SELECT_CELL;
                 } else if (keyboard.get(Keyboard.TAB).isReleased()) {
                     this.currentState = State.IDLE;
-                    nextTurn();
-
                 } else {
                     moveIfPressed();
                 }
@@ -80,7 +76,6 @@ public class RealPlayer extends ICWarsPlayer {
                     if (!this.selectedUnit.getMoveState() && !this.selectedUnit.getPosition().toDiscreteCoordinates()
                             .equals(this.getPosition().toDiscreteCoordinates())) {
                         this.selectedUnit.changePosition(playerCoords);
-
                     }
                     this.selectedUnit = null;
                     this.currentState = State.NORMAL;
@@ -163,7 +158,7 @@ public class RealPlayer extends ICWarsPlayer {
 
         @Override
         public void interactWith(Unit other) {
-            if (currentState == State.SELECT_CELL && other.getFaction() == faction) {
+            if (currentState == State.SELECT_CELL && other.getFaction() == faction && !isDisplacementOccurs() ) {
                 selectedUnit = other;
                 gui.setPlayerSelectedUnit(selectedUnit);
             }

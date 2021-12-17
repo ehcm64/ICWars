@@ -1,14 +1,15 @@
 package ch.epfl.cs107.play.game.icwars;
 
 import java.util.ArrayList;
+import java.util.stream.Collector.Characteristics;
 
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icwars.actor.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
-import ch.epfl.cs107.play.game.icwars.actor.units.Soldier;
-import ch.epfl.cs107.play.game.icwars.actor.units.Tank;
+import ch.epfl.cs107.play.game.icwars.actor.unit.Soldier;
+import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.Level0;
 import ch.epfl.cs107.play.game.icwars.area.Level1;
@@ -27,6 +28,7 @@ public class ICWars extends AreaGame {
 	private ArrayList<ICWarsPlayer> waitingForTurn = new ArrayList<ICWarsPlayer>();
 	private ArrayList<ICWarsPlayer> waitingForNextTurn = new ArrayList<ICWarsPlayer>();
 	private ICWarsPlayer currentPlayer;
+	private GameState currentGameState;
 	private RealPlayer allyPlayer;
 	private RealPlayer enemyPlayer;
 	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
@@ -43,7 +45,6 @@ public class ICWars extends AreaGame {
 
 	}
 
-	
 	/**
 	 * Add all the areas
 	 */
@@ -59,7 +60,7 @@ public class ICWars extends AreaGame {
 			createAreas();
 			areaIndex = 0;
 			initArea(areas[areaIndex]);
-			this.allyPlayer.startTurn();
+			this.currentGameState = GameState.INIT;
 			return true;
 		}
 		return false;
@@ -92,17 +93,77 @@ public class ICWars extends AreaGame {
 
 		this.enemyPlayer.enterArea(area, enemyCoords);
 		this.allyPlayer.enterArea(area, allyCoords);
-
 	}
 
 	@Override
 	public void update(float deltaTime) {
 
 		Keyboard keyboard = getCurrentArea().getKeyboard();
+		switch (this.currentGameState) {
+			case INIT:
+				for (ICWarsPlayer player : this.playerList) {
+					this.waitingForTurn.add(player);
+				}
+				this.currentGameState = GameState.CHOOSE_PLAYER;
+				break;
+			case CHOOSE_PLAYER:
+				if (this.waitingForTurn.size() == 0) {
+					this.currentGameState = GameState.END_TURN;
+				} else {
+					this.currentPlayer = this.waitingForTurn.get(0);
+					this.waitingForTurn.remove(0);
+					this.currentGameState = GameState.START_PLAYER_TURN;
+				}
+				break;
+			case START_PLAYER_TURN:
+				this.currentPlayer.startTurn();
+				this.currentGameState = GameState.PLAYER_TURN;
+				break;
+			case PLAYER_TURN:
+				if (this.currentPlayer.getPlayerState() == ICWarsPlayer.State.IDLE) {
+					this.currentGameState = GameState.END_PLAYER_TURN;
+				}
+				break;
+			case END_PLAYER_TURN:
+				if (this.currentPlayer.isDefeated()) {
+					this.currentPlayer.leaveArea();
+				} else {
+					this.waitingForNextTurn.add(this.currentPlayer);
+					this.currentGameState = GameState.CHOOSE_PLAYER;
+				}
+				break;
+			case END_TURN:
+				ArrayList<ICWarsPlayer> tempList = new ArrayList<ICWarsPlayer>();
+				for (ICWarsPlayer player : this.playerList) {
+					if (player.isDefeated()) {
+						this.waitingForNextTurn.remove(player);
+						tempList.add(player);
+					}
+				}
+				for (ICWarsPlayer player : tempList) {
+					this.playerList.remove(player);
+				}
+				if (this.waitingForNextTurn.size() == 1) {
+					this.currentGameState = GameState.END;
+				} else {
+					for (ICWarsPlayer player : this.waitingForNextTurn) {
+						this.waitingForTurn.add(player);
+					}
+					this.waitingForNextTurn = new ArrayList<ICWarsPlayer>();
+					this.currentGameState = GameState.CHOOSE_PLAYER;
+				}
+				break;
+			case END:
+				nextLevel();
+				break;
+			default:
+				break;
+		}
 		if (keyboard.get(Keyboard.N).isReleased()) {
 			nextLevel();
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
-			reset();
+			currentGameState = GameState.INIT;
+
 		}
 		super.update(deltaTime);
 	}
@@ -118,7 +179,7 @@ public class ICWars extends AreaGame {
 
 	@Override
 	public void end() {
-		//TO DO NSM LE GAMEOVER
+		// TO DO NSM LE GAMEOVER
 		System.out.println("GAME OVER");
 		ArrayList<Unit> uni = new ArrayList<Unit>();
 		ICWarsArea area = (ICWarsArea) getCurrentArea();
@@ -143,7 +204,7 @@ public class ICWars extends AreaGame {
 			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], false);
 			allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
 
-		} else if ( areaIndex == 2){
+		} else if (areaIndex == 2) {
 			end();
 		}
 
