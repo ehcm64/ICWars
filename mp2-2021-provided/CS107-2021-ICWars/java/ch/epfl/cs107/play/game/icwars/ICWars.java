@@ -34,10 +34,16 @@ public class ICWars extends AreaGame {
 
 	public enum GameState {
 		INIT,
-		CHOOSE_PLAYER;
+		CHOOSE_PLAYER,
+		START_PLAYER_TURN,
+		PLAYER_TURN,
+		END_PLAYER_TURN,
+		END_TURN,
+		END;
 
 	}
 
+	
 	/**
 	 * Add all the areas
 	 */
@@ -89,17 +95,6 @@ public class ICWars extends AreaGame {
 
 	}
 
-	public enum GameState {
-		INIT,
-		CHOOSE_PLAYER,
-		START_PLAYER_TURN,
-		PLAYER_TURN,
-		END_PLAYER_TURN,
-		END_TURN,
-		END;
-
-	}
-
 	@Override
 	public void update(float deltaTime) {
 
@@ -123,7 +118,7 @@ public class ICWars extends AreaGame {
 
 	@Override
 	public void end() {
-
+		//TO DO NSM LE GAMEOVER
 		System.out.println("GAME OVER");
 		ArrayList<Unit> uni = new ArrayList<Unit>();
 		ICWarsArea area = (ICWarsArea) getCurrentArea();
@@ -148,7 +143,7 @@ public class ICWars extends AreaGame {
 			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], false);
 			allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
 
-		} else {
+		} else if ( areaIndex == 2){
 			end();
 		}
 
