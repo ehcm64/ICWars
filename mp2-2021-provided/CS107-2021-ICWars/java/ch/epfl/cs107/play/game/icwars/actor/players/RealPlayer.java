@@ -81,6 +81,8 @@ public class RealPlayer extends ICWarsPlayer {
                     }
                     this.selectedUnit = null;
                     this.currentState = State.NORMAL;
+                } else if (keyboard.get(Keyboard.D).isReleased()) {
+                    // TODO
                 }
                 moveIfPressed();
                 break;

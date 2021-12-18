@@ -1,6 +1,7 @@
 package ch.epfl.cs107.play.game.icwars.actor.unit;
 
 import ch.epfl.cs107.play.game.areagame.Area;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.actor.unit.action.Attack;
 import ch.epfl.cs107.play.game.icwars.actor.unit.action.Wait;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -20,8 +21,10 @@ public class Soldier extends Unit {
         else
             this.name = "icwars/enemySoldier";
         sprite = new Sprite(this.name, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
-        this.actions.add(new Attack(this, area));
-        this.actions.add(new Wait(this, area));
+        Action attack = new Attack(this, area);
+        Action wait = new Wait(this, area);
+        this.actions.add(attack);
+        this.actions.add(wait);
         // TODO Auto-generated constructor stub
     }
 
