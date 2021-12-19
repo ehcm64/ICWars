@@ -11,6 +11,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
+import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -19,6 +20,7 @@ public abstract class Unit extends ICWarsActor {
     protected int hp;
     protected int maxHp;
     protected String name;
+    protected String spriteName;
     protected int damage;
     protected int radius;
     protected Sprite sprite;
@@ -33,6 +35,7 @@ public abstract class Unit extends ICWarsActor {
         this.range = new ICWarsRange();
         addAllNodes();
         this.actions = new ArrayList<Action>();
+        this.cellDefStars = ((ICWarsArea)this.getOwnerArea()).currentCellDefStars(this.getPosition().toDiscreteCoordinates());
     }
 
     private void addAllNodes() {
@@ -141,6 +144,7 @@ public abstract class Unit extends ICWarsActor {
             this.hasMoved = true;
             this.range = new ICWarsRange();
             this.addAllNodes();
+            this.cellDefStars = ((ICWarsArea)this.getOwnerArea()).currentCellDefStars(this.getPosition().toDiscreteCoordinates());
             return true;
         } else {
             this.hasMoved = false;

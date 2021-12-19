@@ -15,11 +15,14 @@ public class Tank extends Unit {
         this.damage = 7;
         this.maxHp = 10;
         this.hp = this.maxHp;
-        if (faction.equals(Faction.ALLY))
-            this.name = "icwars/friendlyTank";
-        else
-            this.name = "icwars/enemyTank";
-        sprite = new Sprite(this.name, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
+        if (faction.equals(Faction.ALLY)) {
+            this.spriteName = "icwars/friendlyTank";
+            this.name = "Ally Tank";
+        } else {
+            this.spriteName = "icwars/enemyTank";
+            this.name = "Enemy Tank";
+        }
+        sprite = new Sprite(this.spriteName, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
         this.actions.add(new Attack(this, area));
         this.actions.add(new Wait(this, area));
         

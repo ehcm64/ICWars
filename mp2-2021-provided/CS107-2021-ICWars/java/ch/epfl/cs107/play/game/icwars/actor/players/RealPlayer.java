@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.icwars.ICWars;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
 import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
+import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.gui.ICWarsPlayerGUI;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
@@ -55,6 +56,14 @@ public class RealPlayer extends ICWarsPlayer {
                 } else if (keyboard.get(Keyboard.TAB).isReleased()) {
                     this.currentState = State.IDLE;
                 } else {
+                    ArrayList<Unit> allUnits = ((ICWarsArea)getOwnerArea()).getAllUnits();
+                    for (Unit unit : allUnits) {
+                        if (unit.getPosition().equals(this.getPosition())) {
+                            this.gui.setViewedUnit(unit);
+                        } else {
+                            this.gui.setViewedUnit(null);
+                        }
+                    }
                     moveIfPressed();
                 }
                 break;
@@ -83,8 +92,11 @@ public class RealPlayer extends ICWarsPlayer {
                     this.currentState = State.NORMAL;
                 } else if (this.selectedUnit.getMoveState() && !this.selectedUnit.getAttackState()) {
                     this.currentState = State.ACTION_SELECTION;
+                } else if (this.selectedUnit.getMoveState() && this.selectedUnit.getAttackState()) {
+                    this.currentState = State.NORMAL;
+                } else {
+                    moveIfPressed();
                 }
-                moveIfPressed();
                 break;
             case ACTION_SELECTION:
                 ArrayList<Action> selectedUnitActions = this.selectedUnit.getActions();
@@ -108,6 +120,7 @@ public class RealPlayer extends ICWarsPlayer {
     public void draw(Canvas canvas) {
         if (this.currentState != State.IDLE) {
             this.gui.setPlayerSelectedUnit(selectedUnit);
+            this.gui.setCellType(((ICWarsArea)this.getOwnerArea()).currentCellType(this.getPosition().toDiscreteCoordinates()));
             this.gui.draw(canvas);
             super.draw(canvas);
         } if (this.currentState == State.ACTION) {

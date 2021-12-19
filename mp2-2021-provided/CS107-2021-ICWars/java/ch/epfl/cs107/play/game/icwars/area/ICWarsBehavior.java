@@ -42,8 +42,7 @@ public class ICWarsBehavior extends AreaBehavior {
 		}
 
         public String typeToString() {
-			//TODO TEMPORARY TEST
-            return "TEST";
+            return this.toString();
         }
 	}
 
@@ -63,6 +62,12 @@ public class ICWarsBehavior extends AreaBehavior {
 				setCell(x, y, new ICWarsCell(x, y, color));
 			}
 		}
+	}
+
+	public ICWarsCellType getCellType(int x, int y) {
+		ICWarsCell cell = (ICWarsCell)getCell(x, y);
+		ICWarsCellType type = cell.type;
+		return type;
 	}
 
 	/**

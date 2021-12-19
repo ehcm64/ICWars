@@ -1,7 +1,6 @@
 package ch.epfl.cs107.play.game.icwars;
 
 import java.util.ArrayList;
-import java.util.stream.Collector.Characteristics;
 
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;

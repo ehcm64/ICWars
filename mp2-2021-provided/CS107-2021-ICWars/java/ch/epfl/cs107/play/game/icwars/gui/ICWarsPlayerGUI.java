@@ -9,9 +9,11 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayerGUI implements Graphics {
-    public static final float FONT_SIZE = 10.5f;
+    public static final float FONT_SIZE = 16.5f;
     private ICWarsPlayer player;
     private Unit playerSelectedUnit;
+    private Unit viewedUnit;
+    private ICWarsCellType cellType;
     private ICWarsActionsPanel actionPanel;
     private ICWarsInfoPanel infoPanel;
 
@@ -24,21 +26,41 @@ public class ICWarsPlayerGUI implements Graphics {
     public void setPlayerSelectedUnit (Unit selectedUnit) {
         this.playerSelectedUnit = selectedUnit;
     }
+
+    public void setViewedUnit(Unit viewedUnit) {
+        this.viewedUnit = viewedUnit;
+    }
+
+    public void setCellType(ICWarsCellType type) {
+        this.cellType = type;
+    }
     
     @Override
     public void draw(Canvas canvas) {
         if (player.getPlayerState() == State.MOVE_UNIT && this.playerSelectedUnit != null && !this.playerSelectedUnit.getMoveState()) {
+
             DiscreteCoordinates coords = this.player.getPosition().toDiscreteCoordinates();
             this.playerSelectedUnit.drawRangeAndPathTo(coords, canvas);
+
         } else if (player.getPlayerState() == State.ACTION_SELECTION && this.playerSelectedUnit != null) {
+
             this.actionPanel.setActions(this.playerSelectedUnit.getActions());
             this.actionPanel.draw(canvas);
+
         } else if (player.getPlayerState() == State.NORMAL || player.getPlayerState() == State.SELECT_CELL) {
-            // TODO TEMPORARY TEST
-            this.infoPanel.setUnit(this.playerSelectedUnit);
-            //TODO TEMPORARY TEST
-            this.infoPanel.setCurrentCell(ICWarsCellType.ROAD );
+
+            if (this.viewedUnit != null) {
+
+                this.infoPanel.setUnit(this.viewedUnit);
+
+            } else {
+
+                this.infoPanel.setCurrentCell(this.cellType);
+            }
+
             this.infoPanel.draw(canvas);
+            this.infoPanel.setUnit(null);
+            this.infoPanel.setCurrentCell(null);
         }
     }
 }

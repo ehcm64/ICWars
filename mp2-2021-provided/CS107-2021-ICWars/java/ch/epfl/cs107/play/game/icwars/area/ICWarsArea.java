@@ -1,13 +1,12 @@
 package ch.epfl.cs107.play.game.icwars.area;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import ch.epfl.cs107.play.game.actor.Actor;
 import ch.epfl.cs107.play.game.areagame.Area;
-import ch.epfl.cs107.play.game.areagame.actor.Interactable;
 import ch.epfl.cs107.play.game.icwars.ICWars;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
+import ch.epfl.cs107.play.game.icwars.area.ICWarsBehavior.ICWarsCellType;
 import ch.epfl.cs107.play.io.FileSystem;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Window;
@@ -62,5 +61,31 @@ public abstract class ICWarsArea extends Area {
             }
         }
         return unitsInRange;
+    }
+
+    public ArrayList<Unit> getAllUnits() {
+        ArrayList<Unit> allUnits = new ArrayList<Unit>();
+        for (Actor actor : this.getActors()) {
+            if (actor instanceof Unit) {
+                allUnits.add((Unit)actor);
+            }
+        }
+        return allUnits;
+    }
+
+    public ICWarsCellType currentCellType(DiscreteCoordinates coords) {
+        int x = coords.x;
+        int y = coords.y;
+        
+        ICWarsCellType type = this.behavior.getCellType(x, y);
+        return type;
+    }
+
+    public int currentCellDefStars(DiscreteCoordinates coords) {
+        int x = coords.x;
+        int y = coords.y;
+
+        ICWarsCellType type = this.behavior.getCellType(x, y);
+        return type.getDefenseStar();
     }
 }
