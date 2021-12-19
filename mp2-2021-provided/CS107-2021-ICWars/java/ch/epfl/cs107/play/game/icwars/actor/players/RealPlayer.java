@@ -110,7 +110,8 @@ public class RealPlayer extends ICWarsPlayer {
             this.gui.setPlayerSelectedUnit(selectedUnit);
             this.gui.draw(canvas);
             super.draw(canvas);
-        } else if (this.currentState == State.ACTION) {
+        } 
+        if (this.currentState == State.ACTION) {
             this.act.draw(canvas);
         }
     }

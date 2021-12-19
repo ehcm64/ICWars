@@ -37,7 +37,6 @@ public class Attack extends Action {
                 enemyUnitsinAttackRange.add(unit);
             }
         }
-        unitsInAttackRange = null;
 
         if (enemyUnitsinAttackRange.size() == 0 || keyboard.get(Keyboard.TAB).isReleased()) {
             player.centerCamera();
