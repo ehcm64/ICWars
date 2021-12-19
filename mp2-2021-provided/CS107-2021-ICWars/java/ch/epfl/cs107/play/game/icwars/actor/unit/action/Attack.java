@@ -20,8 +20,6 @@ public class Attack extends Action {
 
     public Attack(Unit unit, Area area) {
         super(unit, area);
-        this.cursor = new ImageGraphics(ResourcePath.getSprite("icwars/UIpackSheet"), 1.f, 1.f,
-                new RegionOfInterest(4 * 18, 26 * 18, 16, 16));
         this.name = "(A)ttack";
         this.key = Keyboard.A;
         this.unitIndex = 0;
@@ -32,7 +30,7 @@ public class Attack extends Action {
     public void doAction(float dt, ICWarsPlayer player, Keyboard keyboard) {
         Faction unitFaction = this.unit.getFaction();
         ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(),
-                this.unitToAttack.getRadius());
+                this.unit.getRadius());
         ArrayList<Unit> enemyUnitsinAttackRange = new ArrayList<Unit>();
         for (Unit unit : unitsInAttackRange) {
             if (unit.getFaction() != unitFaction) {
@@ -65,6 +63,7 @@ public class Attack extends Action {
                 this.unitToAttack.takeDamage(this.unit.getDamage());
                 this.unit.setAttackState(true);
                 this.unitToAttack = null;
+                this.unitIndex = 0;
                 player.centerCamera();
                 player.setPlayerState(State.NORMAL);
             }
@@ -73,7 +72,9 @@ public class Attack extends Action {
 
     @Override
     public void draw(Canvas canvas) {
-        if (this.unitToAttack != null) {
+         if (this.unitToAttack != null ) {
+            this.cursor = new ImageGraphics(ResourcePath.getSprite("icwars/UIpackSheet"), 1.f, 1.f,
+                new RegionOfInterest(4 * 18, 26 * 18, 16, 16));
             this.unitToAttack.centerCamera();
             this.cursor.setAnchor(canvas.getPosition().add(1, 0));
             this.cursor.draw(canvas);

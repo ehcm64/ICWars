@@ -72,22 +72,22 @@ public class RealPlayer extends ICWarsPlayer {
                 }
                 break;
             case MOVE_UNIT:
-                if (keyboard.get(Keyboard.ENTER).isReleased()) {
+                if (!this.selectedUnit.getMoveState() && keyboard.get(Keyboard.ENTER).isReleased()) {
                     DiscreteCoordinates playerCoords = new DiscreteCoordinates((int) this.getPosition().getX(),
                             (int) this.getPosition().getY());
-                    if (!this.selectedUnit.getMoveState() && !this.selectedUnit.getPosition().toDiscreteCoordinates()
+                    if (!this.selectedUnit.getPosition().toDiscreteCoordinates()
                             .equals(this.getPosition().toDiscreteCoordinates())) {
                         this.selectedUnit.changePosition(playerCoords);
                     }
                     this.selectedUnit = null;
                     this.currentState = State.NORMAL;
-                } else if (keyboard.get(Keyboard.D).isReleased()) {
-                    // TODO
+                } else if (this.selectedUnit.getMoveState() && !this.selectedUnit.getAttackState()) {
+                    this.currentState = State.ACTION_SELECTION;
                 }
                 moveIfPressed();
                 break;
             case ACTION_SELECTION:
-            ArrayList<Action> selectedUnitActions = this.selectedUnit.getActions();
+                ArrayList<Action> selectedUnitActions = this.selectedUnit.getActions();
                 for (Action action : selectedUnitActions) {
                     if (keyboard.get(action.getKey()).isReleased()) {
                         this.currentState = State.ACTION;
@@ -110,6 +110,8 @@ public class RealPlayer extends ICWarsPlayer {
             this.gui.setPlayerSelectedUnit(selectedUnit);
             this.gui.draw(canvas);
             super.draw(canvas);
+        } else if (this.currentState == State.ACTION) {
+            this.act.draw(canvas);
         }
     }
 
@@ -167,7 +169,7 @@ public class RealPlayer extends ICWarsPlayer {
 
         @Override
         public void interactWith(Unit other) {
-            if (currentState == State.SELECT_CELL && other.getFaction() == faction && !isDisplacementOccurs() ) {
+            if (currentState == State.SELECT_CELL && other.getFaction() == faction && !isDisplacementOccurs()) {
                 selectedUnit = other;
                 gui.setPlayerSelectedUnit(selectedUnit);
             }

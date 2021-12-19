@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayerGUI implements Graphics {
-    public static final float FONT_SIZE = 1.3f;
+    public static final float FONT_SIZE = 10.5f;
     private ICWarsPlayer player;
     private Unit playerSelectedUnit;
     private ICWarsActionsPanel actionPanel;
@@ -27,7 +27,7 @@ public class ICWarsPlayerGUI implements Graphics {
     
     @Override
     public void draw(Canvas canvas) {
-        if (player.getPlayerState() == State.MOVE_UNIT && this.playerSelectedUnit != null) {
+        if (player.getPlayerState() == State.MOVE_UNIT && this.playerSelectedUnit != null && !this.playerSelectedUnit.getMoveState()) {
             DiscreteCoordinates coords = this.player.getPosition().toDiscreteCoordinates();
             this.playerSelectedUnit.drawRangeAndPathTo(coords, canvas);
         } else if (player.getPlayerState() == State.ACTION_SELECTION && this.playerSelectedUnit != null) {
