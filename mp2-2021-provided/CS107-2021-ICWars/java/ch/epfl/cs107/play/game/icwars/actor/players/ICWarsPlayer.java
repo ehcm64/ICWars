@@ -83,6 +83,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         if (unitsToRemove.size() != 0) {
             for (Unit unit : unitsToRemove) {
                 this.units.remove(unit);
+                this.getOwnerArea().unregisterActor(unit);
             }
         }
     }

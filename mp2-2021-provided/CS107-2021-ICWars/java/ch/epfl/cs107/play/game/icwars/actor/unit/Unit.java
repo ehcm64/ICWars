@@ -103,14 +103,14 @@ public abstract class Unit extends ICWarsActor {
         }
     }
 
-    public float takeDamage(int damage) {
-        hp = hp - damage + this.cellDefStars;
+    public int takeDamage(int damage) {
+        this.hp = this.hp - damage + this.cellDefStars;
         if (hp < 0)
             hp = 0;
         return hp;
     }
 
-    public float repair(int heal) {
+    public int repair(int heal) {
         hp += heal;
         if (hp > maxHp)
             hp = maxHp;
