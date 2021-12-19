@@ -35,7 +35,6 @@ public class Soldier extends Unit {
 
     @Override
     public int getDamage() {
-        // TODO Auto-generated method stub
-        return 0;
+        return 2;
     }
 }

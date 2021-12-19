@@ -16,10 +16,10 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class Unit extends ICWarsActor {
-    protected float hp;
-    protected float maxHp;
+    protected int hp;
+    protected int maxHp;
     protected String name;
-    protected float damage;
+    protected int damage;
     protected int radius;
     protected Sprite sprite;
     protected ICWarsRange range;
