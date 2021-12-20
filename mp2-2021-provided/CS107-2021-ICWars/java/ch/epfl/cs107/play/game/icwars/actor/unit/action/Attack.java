@@ -10,6 +10,7 @@ import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer.State;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
 import ch.epfl.cs107.play.math.RegionOfInterest;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
@@ -69,12 +70,33 @@ public class Attack extends Action {
     }
 
     @Override
+    public void doAutoAction(float dt, ICWarsPlayer player, boolean wait) {
+        Faction unitFaction = this.unit.getFaction();
+        ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(), 1 );
+        ArrayList<Unit> enemyUnitsinAttackRange = new ArrayList<Unit>();
+        for (Unit unit : unitsInAttackRange) {
+            if (unit.getFaction() != unitFaction) {
+                enemyUnitsinAttackRange.add(unit);
+            }
+        }
+        if (enemyUnitsinAttackRange.size() != 0) {
+            this.unitToAttack = this.unit.getClosestEnemyUnit();
+            if (Vector.getDistance(this.unit.getPosition(), this.unitToAttack.getPosition()) <= this.unit.getRadius() && !wait) {
+                this.unitToAttack.takeDamage(this.unit.getDamage());
+                this.unit.setActionState(true);
+                this.unitToAttack = null;
+                player.setPlayerState(State.NORMAL);
+            } 
+        }
+    }
+
+    @Override
     public void draw(Canvas canvas) {
          if (this.unitToAttack != null ) {
             this.cursor = new ImageGraphics(ResourcePath.getSprite("icwars/UIpackSheet"), 1.f, 1.f,
                 new RegionOfInterest(4 * 18, 26 * 18, 16, 16));
             this.unitToAttack.centerCamera();
-            this.cursor.setAnchor(canvas.getPosition().add(1, 0));
+            this.cursor.setAnchor(this.unitToAttack.getPosition().add(1, 0));
             this.cursor.draw(canvas);
         }
     }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import ch.epfl.cs107.play.game.areagame.AreaGame;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
+import ch.epfl.cs107.play.game.icwars.actor.players.AIPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Soldier;
@@ -30,6 +31,7 @@ public class ICWars extends AreaGame {
 	private GameState currentGameState;
 	private RealPlayer allyPlayer;
 	private RealPlayer enemyPlayer;
+	private AIPlayer computer;
 	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
 	private int areaIndex;
 
@@ -80,16 +82,19 @@ public class ICWars extends AreaGame {
 		this.enemyUnits.add(enemySoldier);
 		this.enemyUnits.add(enemyTank);
 
-		this.enemyPlayer = new RealPlayer(area, enemyCoords, Faction.ENEMY, enemyUnits);
+		//this.enemyPlayer = new RealPlayer(area, enemyCoords, Faction.ENEMY, enemyUnits);
+		this.computer = new AIPlayer(area, enemyCoords, Faction.ENEMY, enemyUnits);
 		this.allyPlayer = new RealPlayer(area, allyCoords, Faction.ALLY, allyUnits);
-		this.playerList.add(allyPlayer);
-		this.playerList.add(enemyPlayer);
+		this.playerList.add(this.allyPlayer);
+		//this.playerList.add(this.enemyPlayer);
+		this.playerList.add(this.computer);
 		// player and enemy have their units so these lists are now useless so we reset
 		// them to avoid graphical bugs
 		this.allyUnits = new ArrayList<Unit>();
 		this.enemyUnits = new ArrayList<Unit>();
 
-		this.enemyPlayer.enterArea(area, enemyCoords);
+		//this.enemyPlayer.enterArea(area, enemyCoords);
+		this.computer.enterArea(area, enemyCoords);
 		this.allyPlayer.enterArea(area, allyCoords);
 	}
 
@@ -183,7 +188,6 @@ public class ICWars extends AreaGame {
 		DiscreteCoordinates position = this.allyPlayer.getPosition().toDiscreteCoordinates();
 
 		this.allyPlayer.leaveArea();
-		System.out.print(area + " " + position);
 		RealPlayer gameEnd = new RealPlayer(area, position, Faction.GAMEOVER, uni);
 		gameEnd.enterArea(area, position);
 		gameEnd.startTurn();
@@ -197,9 +201,11 @@ public class ICWars extends AreaGame {
 	protected void nextLevel() {
 		areaIndex += 1;
 		if (areaIndex < areas.length) {
-			allyPlayer.leaveArea();
+			this.allyPlayer.leaveArea();
+			this.computer.leaveArea();
 			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], false);
-			allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+			this.allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+			this.computer.enterArea(currentArea, currentArea.getEnemySpawnPosition());
 
 		} else if (areaIndex == 2) {
 			end();

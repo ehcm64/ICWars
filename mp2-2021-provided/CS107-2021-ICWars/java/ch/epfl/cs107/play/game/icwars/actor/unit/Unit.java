@@ -14,6 +14,7 @@ import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsArea;
 import ch.epfl.cs107.play.game.icwars.area.ICWarsRange;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
+import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class Unit extends ICWarsActor {
@@ -35,7 +36,8 @@ public abstract class Unit extends ICWarsActor {
         this.range = new ICWarsRange();
         addAllNodes();
         this.actions = new ArrayList<Action>();
-        this.cellDefStars = ((ICWarsArea)this.getOwnerArea()).currentCellDefStars(this.getPosition().toDiscreteCoordinates());
+        this.cellDefStars = ((ICWarsArea) this.getOwnerArea())
+                .currentCellDefStars(this.getPosition().toDiscreteCoordinates());
     }
 
     private void addAllNodes() {
@@ -107,7 +109,9 @@ public abstract class Unit extends ICWarsActor {
     }
 
     public int takeDamage(int damage) {
-        this.hp = this.hp - damage + this.cellDefStars;
+        if (damage > this.cellDefStars) {
+            this.hp = this.hp - damage + this.cellDefStars;
+        }
         if (hp < 0)
             hp = 0;
         return hp;
@@ -145,7 +149,8 @@ public abstract class Unit extends ICWarsActor {
             this.hasMoved = true;
             this.range = new ICWarsRange();
             this.addAllNodes();
-            this.cellDefStars = ((ICWarsArea)this.getOwnerArea()).currentCellDefStars(this.getPosition().toDiscreteCoordinates());
+            this.cellDefStars = ((ICWarsArea) this.getOwnerArea())
+                    .currentCellDefStars(this.getPosition().toDiscreteCoordinates());
             return true;
         } else {
             this.hasMoved = false;
@@ -167,5 +172,47 @@ public abstract class Unit extends ICWarsActor {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ICWarsInteractionVisitor) v).interactWith(this);
+    }
+
+    public Unit getClosestEnemyUnit() {
+        Unit closestEnemyUnit = null;
+        ArrayList<Unit> closeUnits = ((ICWarsArea) getOwnerArea())
+                .findCloseUnits(this.getPosition().toDiscreteCoordinates(), 20);
+        ArrayList<Unit> closeEnemyUnits = new ArrayList<Unit>();
+        for (Unit unit : closeUnits) {
+            if (unit.getFaction() != this.getFaction()) {
+                closeEnemyUnits.add(unit);
+            }
+        }
+        if (closeEnemyUnits.size() != 0) {
+            closestEnemyUnit = closeEnemyUnits.get(0);
+            float distance = (float) Math.sqrt(2 * this.getRadius() * this.getRadius() + 1);
+            for (Unit enemyUnit : closeEnemyUnits) {
+                float unitsDistance = Vector.getDistance(this.getPosition(), enemyUnit.getPosition());
+                if (unitsDistance <= distance && enemyUnit.getHp() < closestEnemyUnit.getHp()) {
+                    closestEnemyUnit = enemyUnit;
+                    distance = unitsDistance;
+                }
+            }
+        }
+        return closestEnemyUnit;
+    }
+
+    public boolean moveToClosestEnemyUnit() {
+        // TODO A REFAIRE
+        DiscreteCoordinates originalCoords = this.getPosition().toDiscreteCoordinates();
+        Unit closestEnemyUnit = this.getClosestEnemyUnit();
+        if (closestEnemyUnit != null) {
+            DiscreteCoordinates enemyCoords = closestEnemyUnit.getPosition().toDiscreteCoordinates();
+            ArrayList<DiscreteCoordinates> neighbours = (ArrayList<DiscreteCoordinates>) enemyCoords.getNeighbours();
+            for (DiscreteCoordinates neighbour : neighbours) {
+                this.changePosition(neighbour);
+            }
+        }
+        if (originalCoords.equals(this.getPosition().toDiscreteCoordinates())) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

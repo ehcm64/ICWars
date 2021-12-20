@@ -24,6 +24,12 @@ public class Wait extends Action {
         this.unit.setActionState(true);
         player.setPlayerState(State.NORMAL);
     }
+
+    @Override
+    public void doAutoAction(float dt, ICWarsPlayer player, boolean wait) {
+        this.unit.setActionState(true);
+        player.setPlayerState(State.NORMAL);
+    }
 }
 
     

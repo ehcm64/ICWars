@@ -25,7 +25,6 @@ public class Level0 extends ICWarsArea {
 	}
 
 	protected void createArea() {
-		// Base
 		registerActor(new Background(this));
 	}
 

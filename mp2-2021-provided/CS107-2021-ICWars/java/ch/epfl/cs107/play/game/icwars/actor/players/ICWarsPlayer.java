@@ -8,6 +8,7 @@ import ch.epfl.cs107.play.game.areagame.actor.Sprite;
 import ch.epfl.cs107.play.game.areagame.handler.AreaInteractionVisitor;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
+import ch.epfl.cs107.play.game.icwars.actor.unit.action.Action;
 import ch.epfl.cs107.play.game.icwars.handler.ICWarsInteractionVisitor;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
@@ -18,6 +19,8 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     protected Sprite sprite;
     protected String name;
     protected Unit selectedUnit;
+    protected Action act;
+    protected boolean turnStarting;
 
     public enum State {
         IDLE,
@@ -42,6 +45,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
             unit.setMoveState(false);
             unit.setActionState(false);
         }
+        this.turnStarting = true;
     }
 
     public State getPlayerState() {

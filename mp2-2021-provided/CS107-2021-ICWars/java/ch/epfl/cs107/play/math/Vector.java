@@ -266,11 +266,44 @@ public final class Vector implements Serializable {
         return "(" + x + "," + y + ")";
     }
 
+    //TODO
+    /**
+     * 
+     * @return
+     */
     public DiscreteCoordinates toDiscreteCoordinates() {
         int x = (int) this.getX();
         int y = (int) this.getY();
         DiscreteCoordinates coords = new DiscreteCoordinates(x, y);
         return coords;
+    }
+
+    //TODO
+    /**
+     * 
+     * @param vector1
+     * @param vector2
+     * @return
+     */
+    public static float getDistance(Vector vector1, Vector vector2) {
+        if (vector1 != null && vector2 != null) {
+            float distance = 0;
+            float x1 = vector1.getX();
+            float y1 = vector1.getY();
+            
+            float x2 = vector2.getX();
+            float y2 = vector2.getY();
+
+            float dx = Math.abs(x2 - x1);
+            float dy = Math.abs(y2 - y1);
+
+            distance = (float) Math.sqrt(dx * dx + dy * dy);
+
+            return distance;
+
+        } else {
+            return 0;
+        }
     }
 
 }
