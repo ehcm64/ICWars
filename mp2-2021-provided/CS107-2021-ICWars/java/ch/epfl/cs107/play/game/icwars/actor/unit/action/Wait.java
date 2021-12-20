@@ -1,11 +1,9 @@
 package ch.epfl.cs107.play.game.icwars.actor.unit.action;
 
-import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer.State;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
-import ch.epfl.cs107.play.math.Vector;
 import ch.epfl.cs107.play.window.Canvas;
 import ch.epfl.cs107.play.window.Keyboard;
 
@@ -23,7 +21,7 @@ public class Wait extends Action {
 
     @Override
     public void doAction(float dt, ICWarsPlayer player, Keyboard keyboard) {
-        this.unit.setAttackState(true);
+        this.unit.setActionState(true);
         player.setPlayerState(State.NORMAL);
     }
 }

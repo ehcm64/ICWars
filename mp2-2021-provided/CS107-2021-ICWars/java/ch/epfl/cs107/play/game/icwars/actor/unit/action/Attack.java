@@ -29,8 +29,7 @@ public class Attack extends Action {
     @Override
     public void doAction(float dt, ICWarsPlayer player, Keyboard keyboard) {
         Faction unitFaction = this.unit.getFaction();
-        ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(),
-                this.unit.getRadius());
+        ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(), 1 );
         ArrayList<Unit> enemyUnitsinAttackRange = new ArrayList<Unit>();
         for (Unit unit : unitsInAttackRange) {
             if (unit.getFaction() != unitFaction) {
@@ -60,7 +59,7 @@ public class Attack extends Action {
 
             if (keyboard.get(Keyboard.ENTER).isReleased()) {
                 this.unitToAttack.takeDamage(this.unit.getDamage());
-                this.unit.setAttackState(true);
+                this.unit.setActionState(true);
                 this.unitToAttack = null;
                 this.unitIndex = 0;
                 player.centerCamera();

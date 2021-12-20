@@ -51,6 +51,7 @@ public class RealPlayer extends ICWarsPlayer {
                 break;
             case NORMAL:
                 this.centerCamera();
+                this.gui.setViewedUnit(null);
                 if (keyboard.get(Keyboard.ENTER).isReleased()) {
                     this.currentState = State.SELECT_CELL;
                 } else if (keyboard.get(Keyboard.TAB).isReleased()) {
@@ -88,9 +89,9 @@ public class RealPlayer extends ICWarsPlayer {
                     }
                     this.selectedUnit = null;
                     this.currentState = State.NORMAL;
-                } else if (this.selectedUnit.getMoveState() && !this.selectedUnit.getAttackState()) {
+                } else if (this.selectedUnit.getMoveState() && !this.selectedUnit.getActionState()) {
                     this.currentState = State.ACTION_SELECTION;
-                } else if (this.selectedUnit.getMoveState() && this.selectedUnit.getAttackState()) {
+                } else if (this.selectedUnit.getMoveState() && this.selectedUnit.getActionState()) {
                     this.currentState = State.NORMAL;
                 } else {
                     moveIfPressed();
@@ -160,19 +161,16 @@ public class RealPlayer extends ICWarsPlayer {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<DiscreteCoordinates>();
     }
 
     @Override
     public boolean wantsCellInteraction() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        // TODO Auto-generated method stub
         return false;
     }
 
@@ -188,7 +186,6 @@ public class RealPlayer extends ICWarsPlayer {
 
         @Override
         public void interactWith(RealPlayer other) {
-            System.out.print("oui");
         }
     }
 

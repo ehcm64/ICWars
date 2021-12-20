@@ -13,7 +13,6 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
-    // TODO 2.2.2
     protected State currentState;
     protected ArrayList<Unit> units = new ArrayList<Unit>();
     protected Sprite sprite;
@@ -41,7 +40,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         centerCamera();
         for (Unit unit : this.units) {
             unit.setMoveState(false);
-            unit.setAttackState(false);
+            unit.setActionState(false);
         }
     }
 
@@ -120,13 +119,11 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
 
     @Override
     public boolean isCellInteractable() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public boolean isViewInteractable() {
-        // TODO Auto-generated method stub
         return false;
     }
 

@@ -1,12 +1,8 @@
 package ch.epfl.cs107.play.game.icwars.area;
 
 import ch.epfl.cs107.play.game.areagame.actor.Background;
-import ch.epfl.cs107.play.game.icwars.actor.unit.Soldier;
-import ch.epfl.cs107.play.game.icwars.actor.unit.Tank;
-import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-import java.util.ArrayList;
 
 /**
  * Specific area

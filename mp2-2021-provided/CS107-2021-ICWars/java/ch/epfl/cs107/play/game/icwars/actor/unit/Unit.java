@@ -25,7 +25,7 @@ public abstract class Unit extends ICWarsActor {
     protected int radius;
     protected Sprite sprite;
     protected ICWarsRange range;
-    protected boolean hasAttacked;
+    protected boolean hasActed;
     protected boolean hasMoved;
     protected int cellDefStars;
     protected ArrayList<Action> actions;
@@ -79,12 +79,12 @@ public abstract class Unit extends ICWarsActor {
         return this.hasMoved;
     }
 
-    public void setAttackState(boolean state) {
-        this.hasAttacked = state;
+    public void setActionState(boolean state) {
+        this.hasActed = state;
     }
 
-    public boolean getAttackState() {
-        return this.hasAttacked;
+    public boolean getActionState() {
+        return this.hasActed;
     }
 
     public ArrayList<Action> getActions() {
@@ -124,12 +124,14 @@ public abstract class Unit extends ICWarsActor {
 
     @Override
     public void draw(Canvas canvas) {
-        if (this.hasMoved) {
-            sprite.setAlpha(0.5f);
+        if (this.hasMoved && !this.hasActed) {
+            this.sprite.setAlpha(0.6f);
+        } else if (this.hasActed && this.hasMoved) {
+            this.sprite.setAlpha(0.3f);
         } else {
-            sprite.setAlpha(1.f);
+            this.sprite.setAlpha(1.f);
         }
-        sprite.draw(canvas);
+        this.sprite.draw(canvas);
     }
 
     @Override
@@ -139,7 +141,6 @@ public abstract class Unit extends ICWarsActor {
 
     @Override
     public boolean changePosition(DiscreteCoordinates newPosition) {
-        // TODO Change Position INCOMPLETE ?
         if (this.range.nodeExists(newPosition) && super.changePosition(newPosition)) {
             this.hasMoved = true;
             this.range = new ICWarsRange();
