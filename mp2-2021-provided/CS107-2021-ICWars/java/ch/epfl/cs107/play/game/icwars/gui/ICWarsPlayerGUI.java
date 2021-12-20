@@ -9,7 +9,7 @@ import ch.epfl.cs107.play.math.DiscreteCoordinates;
 import ch.epfl.cs107.play.window.Canvas;
 
 public class ICWarsPlayerGUI implements Graphics {
-    public static final float FONT_SIZE = 16.5f;
+    public static final float FONT_SIZE = 21.5f;
     private ICWarsPlayer player;
     private Unit playerSelectedUnit;
     private Unit viewedUnit;
@@ -17,13 +17,13 @@ public class ICWarsPlayerGUI implements Graphics {
     private ICWarsActionsPanel actionPanel;
     private ICWarsInfoPanel infoPanel;
 
-    public ICWarsPlayerGUI (float cameraScaleFactor, ICWarsPlayer player) {
+    public ICWarsPlayerGUI(float cameraScaleFactor, ICWarsPlayer player) {
         this.player = player;
         this.actionPanel = new ICWarsActionsPanel(cameraScaleFactor);
         this.infoPanel = new ICWarsInfoPanel(cameraScaleFactor);
     }
 
-    public void setPlayerSelectedUnit (Unit selectedUnit) {
+    public void setPlayerSelectedUnit(Unit selectedUnit) {
         this.playerSelectedUnit = selectedUnit;
     }
 
@@ -34,10 +34,11 @@ public class ICWarsPlayerGUI implements Graphics {
     public void setCellType(ICWarsCellType type) {
         this.cellType = type;
     }
-    
+
     @Override
     public void draw(Canvas canvas) {
-        if (player.getPlayerState() == State.MOVE_UNIT && this.playerSelectedUnit != null && !this.playerSelectedUnit.getMoveState()) {
+        if (player.getPlayerState() == State.MOVE_UNIT && this.playerSelectedUnit != null
+                && !this.playerSelectedUnit.getMoveState()) {
 
             DiscreteCoordinates coords = this.player.getPosition().toDiscreteCoordinates();
             this.playerSelectedUnit.drawRangeAndPathTo(coords, canvas);
@@ -54,10 +55,9 @@ public class ICWarsPlayerGUI implements Graphics {
                 this.infoPanel.setUnit(this.viewedUnit);
 
             } else {
-
-                this.infoPanel.setCurrentCell(this.cellType);
+                this.infoPanel.setUnit(null);
             }
-
+            this.infoPanel.setCurrentCell(this.cellType);
             this.infoPanel.draw(canvas);
             this.infoPanel.setUnit(null);
             this.infoPanel.setCurrentCell(null);

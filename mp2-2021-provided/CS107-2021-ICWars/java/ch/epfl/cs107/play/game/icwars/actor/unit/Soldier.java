@@ -16,12 +16,11 @@ public class Soldier extends Unit {
         this.damage = 2;
         this.maxHp = 5;
         this.hp = this.maxHp;
+        this.name = "Soldier";
         if (faction.equals(Faction.ALLY)) {
             this.spriteName = "icwars/friendlySoldier";
-            this.name = "Ally Soldier";
         } else {
             this.spriteName = "icwars/enemySoldier";
-            this.name = "Enemy Soldier";
         }
             
         sprite = new Sprite(this.spriteName, 1.5f, 1.5f, this, null, new Vector(-0.25f, -0.25f));
@@ -29,7 +28,6 @@ public class Soldier extends Unit {
         Action wait = new Wait(this, area);
         this.actions.add(attack);
         this.actions.add(wait);
-        // TODO Auto-generated constructor stub
     }
 
     @Override

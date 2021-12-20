@@ -60,8 +60,6 @@ public class RealPlayer extends ICWarsPlayer {
                     for (Unit unit : allUnits) {
                         if (unit.getPosition().equals(this.getPosition())) {
                             this.gui.setViewedUnit(unit);
-                        } else {
-                            this.gui.setViewedUnit(null);
                         }
                     }
                     moveIfPressed();
