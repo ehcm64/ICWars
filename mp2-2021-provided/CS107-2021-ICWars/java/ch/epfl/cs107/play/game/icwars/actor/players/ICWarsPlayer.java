@@ -62,6 +62,19 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         }
     }
 
+    public void removeAllUnits() {
+        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
+        for (Unit unit : this.units) {
+            unitsToRemove.add(unit);
+        }
+        if (unitsToRemove.size() != 0) {
+            for (Unit unit : unitsToRemove) {
+                this.units.remove(unit);
+                this.getOwnerArea().unregisterActor(unit);
+            }
+        }
+    }
+
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);

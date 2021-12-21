@@ -25,8 +25,8 @@ public class ICWars extends AreaGame {
 	private ArrayList<ICWarsPlayer> playerList = new ArrayList<ICWarsPlayer>();
 	private ArrayList<Unit> allyUnits = new ArrayList<Unit>();
 	private ArrayList<Unit> enemyUnits = new ArrayList<Unit>();
-	private ArrayList<ICWarsPlayer> waitingForTurn = new ArrayList<ICWarsPlayer>();
-	private ArrayList<ICWarsPlayer> waitingForNextTurn = new ArrayList<ICWarsPlayer>();
+	private ArrayList<ICWarsPlayer> waitingForTurn;
+	private ArrayList<ICWarsPlayer> waitingForNextTurn;
 	private ICWarsPlayer currentPlayer;
 	private GameState currentGameState;
 	private RealPlayer allyPlayer;
@@ -66,12 +66,8 @@ public class ICWars extends AreaGame {
 		return false;
 	}
 
-	private void initArea(String areaKey) {
-
-		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
-		DiscreteCoordinates allyCoords = area.getPlayerSpawnPosition();
-		DiscreteCoordinates enemyCoords = area.getEnemySpawnPosition();
-
+	private void createUnits() {
+		removeUnitsFromTempList();
 		Soldier allySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
 		Tank allyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
 		this.allyUnits.add(allySoldier);
@@ -81,18 +77,41 @@ public class ICWars extends AreaGame {
 		Tank enemyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(8, 5), Faction.ENEMY);
 		this.enemyUnits.add(enemySoldier);
 		this.enemyUnits.add(enemyTank);
+	}
 
+	private void removeUnitsFromTempList() {
+		this.allyUnits = new ArrayList<Unit>();
+		this.enemyUnits = new ArrayList<Unit>();
+	}
+
+	private void resetPlayersAndUnits() {
+		removeUnitsFromTempList();
+		if (this.playerList.size() != 0) {
+			this.playerList.remove(this.allyPlayer);
+			this.playerList.remove(this.computer);
+		}
+		this.allyPlayer = null;
+		this.computer = null;
+	}
+
+	private void initArea(String areaKey) {
+
+		removeUnitsFromTempList();
+		resetPlayersAndUnits();
+
+		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
+		DiscreteCoordinates allyCoords = area.getPlayerSpawnPosition();
+		DiscreteCoordinates enemyCoords = area.getEnemySpawnPosition();
+		createUnits();
 		//this.enemyPlayer = new RealPlayer(area, enemyCoords, Faction.ENEMY, enemyUnits);
-		this.computer = new AIPlayer(area, enemyCoords, Faction.ENEMY, enemyUnits);
-		this.allyPlayer = new RealPlayer(area, allyCoords, Faction.ALLY, allyUnits);
+		this.computer = new AIPlayer(area, enemyCoords, Faction.ENEMY, this.enemyUnits);
+		this.allyPlayer = new RealPlayer(area, allyCoords, Faction.ALLY, this.allyUnits);
 		this.playerList.add(this.allyPlayer);
 		//this.playerList.add(this.enemyPlayer);
 		this.playerList.add(this.computer);
 		// player and enemy have their units so these lists are now useless so we reset
 		// them to avoid graphical bugs
-		this.allyUnits = new ArrayList<Unit>();
-		this.enemyUnits = new ArrayList<Unit>();
-
+		removeUnitsFromTempList();
 		//this.enemyPlayer.enterArea(area, enemyCoords);
 		this.computer.enterArea(area, enemyCoords);
 		this.allyPlayer.enterArea(area, allyCoords);
@@ -104,9 +123,12 @@ public class ICWars extends AreaGame {
 		Keyboard keyboard = getCurrentArea().getKeyboard();
 		switch (this.currentGameState) {
 			case INIT:
+				this.waitingForTurn = new ArrayList<ICWarsPlayer>();
+				this.waitingForNextTurn = new ArrayList<ICWarsPlayer>();
 				for (ICWarsPlayer player : this.playerList) {
 					this.waitingForTurn.add(player);
 				}
+				this.waitingForNextTurn = new ArrayList<ICWarsPlayer>();
 				this.currentGameState = GameState.CHOOSE_PLAYER;
 				break;
 			case CHOOSE_PLAYER:
@@ -136,19 +158,12 @@ public class ICWars extends AreaGame {
 				}
 				break;
 			case END_TURN:
-				ArrayList<ICWarsPlayer> tempList = new ArrayList<ICWarsPlayer>();
 				for (ICWarsPlayer player : this.playerList) {
 					if (player.isDefeated()) {
-						this.waitingForNextTurn.remove(player);
-						tempList.add(player);
+						this.currentGameState = GameState.END;
 					}
 				}
-				for (ICWarsPlayer player : tempList) {
-					this.playerList.remove(player);
-				}
-				if (this.waitingForNextTurn.size() == 1) {
-					this.currentGameState = GameState.END;
-				} else {
+				if (this.currentGameState != GameState.END) {
 					for (ICWarsPlayer player : this.waitingForNextTurn) {
 						this.waitingForTurn.add(player);
 					}
@@ -157,6 +172,7 @@ public class ICWars extends AreaGame {
 				}
 				break;
 			case END:
+			this.currentGameState = GameState.INIT;
 				nextLevel();
 				break;
 			default:
@@ -165,7 +181,7 @@ public class ICWars extends AreaGame {
 		if (keyboard.get(Keyboard.N).isReleased()) {
 			nextLevel();
 		} else if (keyboard.get(Keyboard.R).isReleased()) {
-			currentGameState = GameState.INIT;
+			reset();
 		}
 		super.update(deltaTime);
 	}
@@ -173,22 +189,26 @@ public class ICWars extends AreaGame {
 	private void reset() {
 		// BUG : garde une ancienne unité aprés qu'elle ait bougé
 		this.allyPlayer.leaveArea();
+		this.computer.leaveArea();
 		areaIndex = 0;
 		initArea(areas[areaIndex]);
+		this.currentGameState = GameState.INIT;
 		this.allyPlayer.startTurn();
-
 	}
 
 	@Override
 	public void end() {
 		// TO DO NSM LE GAMEOVER
+		removeUnitsFromTempList();
+		this.allyPlayer.removeAllUnits();
+		this.computer.removeAllUnits();
 		System.out.println("GAME OVER");
-		ArrayList<Unit> uni = new ArrayList<Unit>();
+		ArrayList<Unit> units = new ArrayList<Unit>();
 		ICWarsArea area = (ICWarsArea) getCurrentArea();
 		DiscreteCoordinates position = this.allyPlayer.getPosition().toDiscreteCoordinates();
 
 		this.allyPlayer.leaveArea();
-		RealPlayer gameEnd = new RealPlayer(area, position, Faction.GAMEOVER, uni);
+		RealPlayer gameEnd = new RealPlayer(area, position, Faction.GAMEOVER, units);
 		gameEnd.enterArea(area, position);
 		gameEnd.startTurn();
 	}
@@ -203,11 +223,16 @@ public class ICWars extends AreaGame {
 		if (areaIndex < areas.length) {
 			this.allyPlayer.leaveArea();
 			this.computer.leaveArea();
-			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], false);
+			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], true);
+			this.allyPlayer.removeAllUnits();
+			this.computer.removeAllUnits();
+			createUnits();
+			this.allyPlayer.addAllUnits(this.allyUnits);
+			this.computer.addAllUnits(this.enemyUnits);
 			this.allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
 			this.computer.enterArea(currentArea, currentArea.getEnemySpawnPosition());
 
-		} else if (areaIndex == 2) {
+		} else if (areaIndex >= areas.length) {
 			end();
 		}
 

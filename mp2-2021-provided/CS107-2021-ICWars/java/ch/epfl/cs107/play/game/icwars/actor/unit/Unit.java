@@ -222,25 +222,11 @@ public abstract class Unit extends ICWarsActor {
                 EnemyOutOfRange = true;
             }
 
-            if (EnemyOutOfRange) {
-                for (int y = 0; y < 4; y++) {
-                    yDelta = y;
-                    Vector toEnemy = new Vector(xDelta, yDelta);
+            Vector toEnemy = new Vector(xDelta, yDelta);
                     Vector newPos = this.getPosition().add(toEnemy);
                     DiscreteCoordinates newPosition = newPos.toDiscreteCoordinates();
                     this.changePosition(newPosition);
-                    toEnemy = new Vector(xDelta, -yDelta);
-                    newPos = this.getPosition().add(toEnemy);
-                    newPosition = newPos.toDiscreteCoordinates();
-                    this.changePosition(newPosition);
                 }
-            } else {
-                ArrayList<DiscreteCoordinates> neighbours = (ArrayList<DiscreteCoordinates>)closestEnemyUnit.getPosition().toDiscreteCoordinates().getNeighbours();
-                for (DiscreteCoordinates neighbour : neighbours) {
-                    this.changePosition(neighbour);
-                }
-            }
-        }
         if (originalCoords.equals(this.getPosition().toDiscreteCoordinates())) {
             return false;
         } else {
