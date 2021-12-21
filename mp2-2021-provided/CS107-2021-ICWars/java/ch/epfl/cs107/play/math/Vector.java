@@ -266,10 +266,9 @@ public final class Vector implements Serializable {
         return "(" + x + "," + y + ")";
     }
 
-    //TODO
-    /**
+    /** Transforms a this Vector into DiscreteCoordinates.
      * 
-     * @return
+     * @return (DiscreteCoordinates): the coordinates.
      */
     public DiscreteCoordinates toDiscreteCoordinates() {
         int x = (int) this.getX();
@@ -278,12 +277,12 @@ public final class Vector implements Serializable {
         return coords;
     }
 
-    //TODO
-    /**
+    
+    /** Calculate the distance between two positions represented by vectors.
      * 
-     * @param vector1
-     * @param vector2
-     * @return
+     * @param vector1 (Vector): first vector, not null
+     * @param vector2 (Vector): second vector, not null
+     * @return (float): the distance.
      */
     public static float getDistance(Vector vector1, Vector vector2) {
         if (vector1 != null && vector2 != null) {
@@ -305,5 +304,4 @@ public final class Vector implements Serializable {
             return 0;
         }
     }
-
 }

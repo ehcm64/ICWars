@@ -40,6 +40,53 @@ public abstract class Unit extends ICWarsActor {
                 .currentCellDefStars(this.getPosition().toDiscreteCoordinates());
     }
 
+    @Override
+    public void draw(Canvas canvas) {
+        if (this.hasMoved && !this.hasActed) {
+            this.sprite.setAlpha(0.6f);
+        } else if (this.hasActed && this.hasMoved) {
+            this.sprite.setAlpha(0.3f);
+        } else {
+            this.sprite.setAlpha(1.f);
+        }
+        this.sprite.draw(canvas);
+    }
+
+    @Override
+    public boolean takeCellSpace() {
+        return true;
+    }
+
+    @Override
+    public boolean changePosition(DiscreteCoordinates newPosition) {
+        if (this.range.nodeExists(newPosition) && super.changePosition(newPosition)) {
+            this.hasMoved = true;
+            this.range = new ICWarsRange();
+            this.addAllNodes();
+            this.cellDefStars = ((ICWarsArea) this.getOwnerArea())
+                    .currentCellDefStars(this.getPosition().toDiscreteCoordinates());
+            return true;
+        } else {
+            this.hasMoved = false;
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isCellInteractable() {
+        return false;
+    }
+
+    @Override
+    public boolean isViewInteractable() {
+        return false;
+    }
+
+    @Override
+    public void acceptInteraction(AreaInteractionVisitor v) {
+        ((ICWarsInteractionVisitor) v).interactWith(this);
+    }
+
     private void addAllNodes() {
         int fromX = (int) getPosition().getX();
         int fromY = (int) getPosition().getY();
@@ -125,53 +172,6 @@ public abstract class Unit extends ICWarsActor {
     }
 
     public abstract int getDamage();
-
-    @Override
-    public void draw(Canvas canvas) {
-        if (this.hasMoved && !this.hasActed) {
-            this.sprite.setAlpha(0.6f);
-        } else if (this.hasActed && this.hasMoved) {
-            this.sprite.setAlpha(0.3f);
-        } else {
-            this.sprite.setAlpha(1.f);
-        }
-        this.sprite.draw(canvas);
-    }
-
-    @Override
-    public boolean takeCellSpace() {
-        return true;
-    }
-
-    @Override
-    public boolean changePosition(DiscreteCoordinates newPosition) {
-        if (this.range.nodeExists(newPosition) && super.changePosition(newPosition)) {
-            this.hasMoved = true;
-            this.range = new ICWarsRange();
-            this.addAllNodes();
-            this.cellDefStars = ((ICWarsArea) this.getOwnerArea())
-                    .currentCellDefStars(this.getPosition().toDiscreteCoordinates());
-            return true;
-        } else {
-            this.hasMoved = false;
-            return false;
-        }
-    }
-
-    @Override
-    public boolean isCellInteractable() {
-        return false;
-    }
-
-    @Override
-    public boolean isViewInteractable() {
-        return false;
-    }
-
-    @Override
-    public void acceptInteraction(AreaInteractionVisitor v) {
-        ((ICWarsInteractionVisitor) v).interactWith(this);
-    }
 
     public Unit getClosestEnemyUnit() {
         Unit closestEnemyUnit = null;

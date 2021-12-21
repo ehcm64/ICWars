@@ -77,28 +77,6 @@ public class AIPlayer extends ICWarsPlayer {
         super.update(deltaTime);
     }
 
-    /**
-     * Ensures that value time elapsed before returning true
-     * @param dt    elapsed time
-     * @param value waiting time (in seconds)
-     * @return true if value seconds has elapsed , false otherwise
-     */
-    private boolean waitFor(float value, float dt) {
-        boolean counting = true;
-        float counter = 0f;
-        if (counting) {
-            counter += dt;
-            if (counter > value) {
-                counting = false;
-                return true;
-            }
-        } else {
-            counter = 0f;
-            counting = true;
-        }
-        return false;
-    }
-
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         return new ArrayList<DiscreteCoordinates>();
@@ -126,5 +104,27 @@ public class AIPlayer extends ICWarsPlayer {
         if  (this.currentState == State.ACTION) {
             this.act.draw(canvas);
         }
+    }
+
+    /**
+     * Ensures that value time elapsed before returning true
+     * @param dt    elapsed time
+     * @param value waiting time (in seconds)
+     * @return true if value seconds has elapsed , false otherwise
+     */
+    private boolean waitFor(float value, float dt) {
+        boolean counting = true;
+        float counter = 0f;
+        if (counting) {
+            counter += dt;
+            if (counter > value) {
+                counting = false;
+                return true;
+            }
+        } else {
+            counter = 0f;
+            counting = true;
+        }
+        return false;
     }
 }

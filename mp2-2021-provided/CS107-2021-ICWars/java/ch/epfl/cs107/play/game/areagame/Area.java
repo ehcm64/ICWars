@@ -401,7 +401,11 @@ public abstract class Area implements Playable, PauseMenu.Pausable {
     public final boolean isPaused() {
         return paused;
     }
-
+    
+    /** Gets the list of Actors register in the area.
+     * 
+     * @return (List<Actor>): the actors in the area.
+     */
     protected List<Actor> getActors() {
         return this.actors;
     }

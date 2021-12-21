@@ -138,32 +138,6 @@ public class RealPlayer extends ICWarsPlayer {
             this.currentState = State.NORMAL;
     }
 
-    /**
-     * Orientate and Move this player in the given orientation if the given button
-     * is down
-     * 
-     * @param orientation (Orientation): given orientation, not null
-     * @param b           (Button): button corresponding to the given orientation,
-     *                    not null
-     */
-    private void moveIfPressed(Orientation orientation, Button b) {
-        if (b.isDown()) {
-            if (!isDisplacementOccurs()) {
-                orientate(orientation);
-                move(MOVE_DURATION);
-            }
-        }
-    }
-
-    private void moveIfPressed() {
-        Keyboard keyboard = getOwnerArea().getKeyboard();
-
-        moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
-        moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
-        moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
-        moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
-    }
-
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
         return new ArrayList<DiscreteCoordinates>();
@@ -177,6 +151,11 @@ public class RealPlayer extends ICWarsPlayer {
     @Override
     public boolean wantsViewInteraction() {
         return false;
+    }
+
+    @Override
+    public void interactWith(Interactable other) {
+        other.acceptInteraction(handler);
     }
 
     private class ICWarsPlayerInteractionHandler implements ICWarsInteractionVisitor {
@@ -194,8 +173,31 @@ public class RealPlayer extends ICWarsPlayer {
         }
     }
 
-    @Override
-    public void interactWith(Interactable other) {
-        other.acceptInteraction(handler);
+    /**
+     * Orientate and Move this player in the given orientation if the given button
+     * is down
+     * 
+     * @param orientation (Orientation): given orientation, not null
+     * @param b           (Button): button corresponding to the given orientation,
+     *                    not null
+     */
+    private void moveIfPressed(Orientation orientation, Button b) {
+        if (b.isDown()) {
+            if (!isDisplacementOccurs()) {
+                orientate(orientation);
+                move(MOVE_DURATION);
+            }
+        }
+    }
+    /**
+     * Check if any movement key is pressed and move (or not) accordingly.
+     */
+    private void moveIfPressed() {
+        Keyboard keyboard = getOwnerArea().getKeyboard();
+
+        moveIfPressed(Orientation.LEFT, keyboard.get(Keyboard.LEFT));
+        moveIfPressed(Orientation.UP, keyboard.get(Keyboard.UP));
+        moveIfPressed(Orientation.RIGHT, keyboard.get(Keyboard.RIGHT));
+        moveIfPressed(Orientation.DOWN, keyboard.get(Keyboard.DOWN));
     }
 }

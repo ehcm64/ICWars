@@ -38,43 +38,6 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         addAllUnits(units);
     }
 
-    public void startTurn() {
-        this.currentState = State.NORMAL;
-        centerCamera();
-        for (Unit unit : this.units) {
-            unit.setMoveState(false);
-            unit.setActionState(false);
-        }
-        this.turnStarting = true;
-    }
-
-    public State getPlayerState() {
-        return this.currentState;
-    }
-
-    public void addUnit(Unit unit) {
-        this.units.add(unit);
-    }
-
-    public void addAllUnits(ArrayList<Unit> units) {
-        for (Unit unit : units) {
-            this.units.add(unit);
-        }
-    }
-
-    public void removeAllUnits() {
-        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
-        for (Unit unit : this.units) {
-            unitsToRemove.add(unit);
-        }
-        if (unitsToRemove.size() != 0) {
-            for (Unit unit : unitsToRemove) {
-                this.units.remove(unit);
-                this.getOwnerArea().unregisterActor(unit);
-            }
-        }
-    }
-
     @Override
     public void draw(Canvas canvas) {
         sprite.draw(canvas);
@@ -86,24 +49,7 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         super.update(deltaTime);
     }
 
-    public void setPlayerState(State state) {
-        this.currentState = state;
-    }
-
-    private void removeDeadUnits() {
-        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
-        for (Unit unit : this.units) {
-            if (unit.getHp() == 0)
-                unitsToRemove.add(unit);
-        }
-        if (unitsToRemove.size() != 0) {
-            for (Unit unit : unitsToRemove) {
-                this.units.remove(unit);
-                this.getOwnerArea().unregisterActor(unit);
-            }
-        }
-    }
-
+    @Override
     public void enterArea(Area area, DiscreteCoordinates position) {
         for (Unit unit : this.units) {
             area.registerActor(unit);
@@ -127,14 +73,6 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         return false;
     }
 
-    public boolean isDefeated() {
-        if (this.units.size() == 0) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public boolean isCellInteractable() {
         return true;
@@ -148,5 +86,64 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     @Override
     public void acceptInteraction(AreaInteractionVisitor v) {
         ((ICWarsInteractionVisitor) v).interactWith(this);
+    }
+
+    public void startTurn() {
+        this.currentState = State.NORMAL;
+        centerCamera();
+        for (Unit unit : this.units) {
+            unit.setMoveState(false);
+            unit.setActionState(false);
+        }
+        this.turnStarting = true;
+    }
+
+    public State getPlayerState() {
+        return this.currentState;
+    }
+
+    public void addAllUnits(ArrayList<Unit> units) {
+        for (Unit unit : units) {
+            this.units.add(unit);
+        }
+    }
+
+    public void removeAllUnits() {
+        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
+        for (Unit unit : this.units) {
+            unitsToRemove.add(unit);
+        }
+        if (unitsToRemove.size() != 0) {
+            for (Unit unit : unitsToRemove) {
+                this.units.remove(unit);
+                this.getOwnerArea().unregisterActor(unit);
+            }
+        }
+    }
+
+    public void setPlayerState(State state) {
+        this.currentState = state;
+    }
+
+    private void removeDeadUnits() {
+        ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
+        for (Unit unit : this.units) {
+            if (unit.getHp() == 0)
+                unitsToRemove.add(unit);
+        }
+        if (unitsToRemove.size() != 0) {
+            for (Unit unit : unitsToRemove) {
+                this.units.remove(unit);
+                this.getOwnerArea().unregisterActor(unit);
+            }
+        }
+    }
+
+    public boolean isDefeated() {
+        if (this.units.size() == 0) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
