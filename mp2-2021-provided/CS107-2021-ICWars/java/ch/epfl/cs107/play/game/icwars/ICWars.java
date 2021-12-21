@@ -151,7 +151,7 @@ public class ICWars extends AreaGame {
 				break;
 			case END_PLAYER_TURN:
 				if (this.currentPlayer.isDefeated()) {
-					this.currentPlayer.leaveArea();
+					this.currentGameState = GameState.END_TURN;
 				} else {
 					this.waitingForNextTurn.add(this.currentPlayer);
 					this.currentGameState = GameState.CHOOSE_PLAYER;
@@ -172,7 +172,6 @@ public class ICWars extends AreaGame {
 				}
 				break;
 			case END:
-			this.currentGameState = GameState.INIT;
 				nextLevel();
 				break;
 			default:
@@ -231,8 +230,9 @@ public class ICWars extends AreaGame {
 			this.computer.addAllUnits(this.enemyUnits);
 			this.allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
 			this.computer.enterArea(currentArea, currentArea.getEnemySpawnPosition());
+			this.currentGameState = GameState.INIT;
 
-		} else if (areaIndex >= areas.length) {
+		} else if (areaIndex == areas.length) {
 			end();
 		}
 

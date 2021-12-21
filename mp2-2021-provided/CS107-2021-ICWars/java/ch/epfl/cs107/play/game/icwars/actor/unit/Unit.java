@@ -47,7 +47,7 @@ public abstract class Unit extends ICWarsActor {
         for (int x = -radius; x <= radius; x++) {
             for (int y = -radius; y <= radius; y++) {
                 if (x + fromX >= 0 && x + fromX < getOwnerArea().getWidth() && y + fromY >= 0
-                        && y + fromY < getOwnerArea().getWidth()) {
+                        && y + fromY < getOwnerArea().getHeight()) {
                     DiscreteCoordinates coords = new DiscreteCoordinates(x + fromX, y + fromY);
                     boolean hasLeftEdge = x > -radius && x + fromX > 0;
                     boolean hasRightEdge = x < radius && x + fromX < getOwnerArea().getWidth();
