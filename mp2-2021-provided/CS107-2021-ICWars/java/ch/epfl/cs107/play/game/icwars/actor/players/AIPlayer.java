@@ -101,25 +101,21 @@ public class AIPlayer extends ICWarsPlayer {
 
     @Override
     public List<DiscreteCoordinates> getFieldOfViewCells() {
-        // TODO Auto-generated method stub
-        return null;
+        return new ArrayList<DiscreteCoordinates>();
     }
 
     @Override
     public boolean wantsCellInteraction() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public boolean wantsViewInteraction() {
-        // TODO Auto-generated method stub
         return false;
     }
 
     @Override
     public void interactWith(Interactable other) {
-        // TODO Auto-generated method stub
     }
 
     @Override

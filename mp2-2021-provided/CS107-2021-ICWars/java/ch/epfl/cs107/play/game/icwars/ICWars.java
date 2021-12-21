@@ -19,7 +19,6 @@ import ch.epfl.cs107.play.window.Keyboard;
 import ch.epfl.cs107.play.window.Window;
 
 public class ICWars extends AreaGame {
-	// TODO REORGANISE UNIT AND PLAYER MANAGEMENT WHEN CHANGING LEVEL
 	public final static float CAMERA_SCALE_FACTOR = 10.f;
 
 	private ArrayList<ICWarsPlayer> playerList = new ArrayList<ICWarsPlayer>();
@@ -85,36 +84,30 @@ public class ICWars extends AreaGame {
 	}
 
 	private void resetPlayersAndUnits() {
-		removeUnitsFromTempList();
-		if (this.playerList.size() != 0) {
-			this.playerList.remove(this.allyPlayer);
-			this.playerList.remove(this.computer);
+		ArrayList<ICWarsPlayer> playersToRemove = new ArrayList<ICWarsPlayer>();
+		for (ICWarsPlayer player : this.playerList) {
+			playersToRemove.add(player);
 		}
-		this.allyPlayer = null;
-		this.computer = null;
+		if (playersToRemove.size() != 0) {
+			for (ICWarsPlayer player : playersToRemove) {
+				this.playerList.remove(player);
+			}
+		}
+		createUnits();
+		this.computer = new AIPlayer(this.getCurrentArea(), ((ICWarsArea) getCurrentArea()).getEnemySpawnPosition(),
+				Faction.ENEMY, this.enemyUnits);
+		this.allyPlayer = new RealPlayer(this.getCurrentArea(),
+				((ICWarsArea) getCurrentArea()).getPlayerSpawnPosition(), Faction.ALLY, this.allyUnits);
+		this.playerList.add(this.allyPlayer);
+		this.playerList.add(this.computer);
+		removeUnitsFromTempList();
 	}
 
 	private void initArea(String areaKey) {
-
-		removeUnitsFromTempList();
-		resetPlayersAndUnits();
-
 		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
-		DiscreteCoordinates allyCoords = area.getPlayerSpawnPosition();
-		DiscreteCoordinates enemyCoords = area.getEnemySpawnPosition();
-		createUnits();
-		//this.enemyPlayer = new RealPlayer(area, enemyCoords, Faction.ENEMY, enemyUnits);
-		this.computer = new AIPlayer(area, enemyCoords, Faction.ENEMY, this.enemyUnits);
-		this.allyPlayer = new RealPlayer(area, allyCoords, Faction.ALLY, this.allyUnits);
-		this.playerList.add(this.allyPlayer);
-		//this.playerList.add(this.enemyPlayer);
-		this.playerList.add(this.computer);
-		// player and enemy have their units so these lists are now useless so we reset
-		// them to avoid graphical bugs
-		removeUnitsFromTempList();
-		//this.enemyPlayer.enterArea(area, enemyCoords);
-		this.computer.enterArea(area, enemyCoords);
-		this.allyPlayer.enterArea(area, allyCoords);
+		resetPlayersAndUnits();
+		this.computer.enterArea(area, ((ICWarsArea) getCurrentArea()).getEnemySpawnPosition());
+		this.allyPlayer.enterArea(area, ((ICWarsArea) getCurrentArea()).getPlayerSpawnPosition());
 	}
 
 	@Override
@@ -128,7 +121,6 @@ public class ICWars extends AreaGame {
 				for (ICWarsPlayer player : this.playerList) {
 					this.waitingForTurn.add(player);
 				}
-				this.waitingForNextTurn = new ArrayList<ICWarsPlayer>();
 				this.currentGameState = GameState.CHOOSE_PLAYER;
 				break;
 			case CHOOSE_PLAYER:
@@ -151,19 +143,26 @@ public class ICWars extends AreaGame {
 				break;
 			case END_PLAYER_TURN:
 				if (this.currentPlayer.isDefeated()) {
-					this.currentGameState = GameState.END_TURN;
+					this.currentPlayer.leaveArea();
 				} else {
 					this.waitingForNextTurn.add(this.currentPlayer);
 					this.currentGameState = GameState.CHOOSE_PLAYER;
 				}
 				break;
 			case END_TURN:
+				ArrayList<ICWarsPlayer> tempList = new ArrayList<ICWarsPlayer>();
 				for (ICWarsPlayer player : this.playerList) {
 					if (player.isDefeated()) {
-						this.currentGameState = GameState.END;
+						this.waitingForNextTurn.remove(player);
+						tempList.add(player);
 					}
 				}
-				if (this.currentGameState != GameState.END) {
+				for (ICWarsPlayer player : tempList) {
+					this.playerList.remove(player);
+				}
+				if (this.waitingForNextTurn.size() == 1) {
+					this.currentGameState = GameState.END;
+				} else {
 					for (ICWarsPlayer player : this.waitingForNextTurn) {
 						this.waitingForTurn.add(player);
 					}
@@ -207,7 +206,10 @@ public class ICWars extends AreaGame {
 		DiscreteCoordinates position = this.allyPlayer.getPosition().toDiscreteCoordinates();
 
 		this.allyPlayer.leaveArea();
+		this.computer.leaveArea();
+		this.playerList = new ArrayList<ICWarsPlayer>();
 		RealPlayer gameEnd = new RealPlayer(area, position, Faction.GAMEOVER, units);
+		this.playerList.add(gameEnd);
 		gameEnd.enterArea(area, position);
 		gameEnd.startTurn();
 	}
@@ -223,19 +225,12 @@ public class ICWars extends AreaGame {
 			this.allyPlayer.leaveArea();
 			this.computer.leaveArea();
 			ICWarsArea currentArea = (ICWarsArea) setCurrentArea(areas[areaIndex], true);
-			this.allyPlayer.removeAllUnits();
-			this.computer.removeAllUnits();
-			createUnits();
-			this.allyPlayer.addAllUnits(this.allyUnits);
-			this.computer.addAllUnits(this.enemyUnits);
-			this.allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
+			resetPlayersAndUnits();
 			this.computer.enterArea(currentArea, currentArea.getEnemySpawnPosition());
+			this.allyPlayer.enterArea(currentArea, currentArea.getPlayerSpawnPosition());
 			this.currentGameState = GameState.INIT;
-
 		} else if (areaIndex == areas.length) {
 			end();
 		}
-
 	}
-
 }

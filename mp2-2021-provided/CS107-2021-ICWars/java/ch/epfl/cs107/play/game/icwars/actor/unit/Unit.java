@@ -156,7 +156,6 @@ public abstract class Unit extends ICWarsActor {
             this.hasMoved = false;
             return false;
         }
-
     }
 
     @Override
@@ -176,8 +175,14 @@ public abstract class Unit extends ICWarsActor {
 
     public Unit getClosestEnemyUnit() {
         Unit closestEnemyUnit = null;
+        int range = 0;
+        if (this.getOwnerArea().getHeight() > this.getOwnerArea().getWidth()) {
+            range = this.getOwnerArea().getHeight();
+        } else {
+            range = this.getOwnerArea().getWidth();
+        }
         ArrayList<Unit> closeUnits = ((ICWarsArea) getOwnerArea())
-                .findCloseUnits(this.getPosition().toDiscreteCoordinates(), 30);
+                .findCloseUnits(this.getPosition().toDiscreteCoordinates(), range);
         ArrayList<Unit> closeEnemyUnits = new ArrayList<Unit>();
         for (Unit unit : closeUnits) {
             if (unit.getFaction() != this.getFaction()) {
@@ -189,7 +194,8 @@ public abstract class Unit extends ICWarsActor {
             float distance = (float) Math.sqrt(900);
             for (Unit enemyUnit : closeEnemyUnits) {
                 float unitsDistance = Vector.getDistance(this.getPosition(), enemyUnit.getPosition());
-                if (unitsDistance <= distance || (unitsDistance == distance && enemyUnit.getHp() < closestEnemyUnit.getHp())) {
+                if (unitsDistance < distance
+                        || (unitsDistance == distance && enemyUnit.getHp() < closestEnemyUnit.getHp())) {
                     closestEnemyUnit = enemyUnit;
                     distance = unitsDistance;
                 }
@@ -198,39 +204,45 @@ public abstract class Unit extends ICWarsActor {
         return closestEnemyUnit;
     }
 
-    public boolean moveToClosestEnemyUnit() {
-        // TODO A REFAIRE
-        DiscreteCoordinates originalCoords = this.getPosition().toDiscreteCoordinates();
+    public void moveToClosestEnemyUnit() {
         Unit closestEnemyUnit = this.getClosestEnemyUnit();
+        boolean inRange = true;
         if (closestEnemyUnit != null) {
-            boolean EnemyOutOfRange = false;
             Vector enemyPos = closestEnemyUnit.getPosition();
-            float xDelta =  enemyPos.getX() - this.getPosition().getX();
+            float xDelta = enemyPos.getX() - this.getPosition().getX();
             float yDelta = enemyPos.getY() - this.getPosition().getY();
-            if (xDelta >  this.getRadius()) {
+            if (xDelta > this.getRadius()) {
                 xDelta = this.getRadius();
-                EnemyOutOfRange = true;
+                inRange = false;
             } else if (xDelta < -this.getRadius()) {
                 xDelta = -this.getRadius();
-                EnemyOutOfRange = true;
+                inRange = false;
             }
             if (yDelta > this.getRadius()) {
                 yDelta = this.getRadius();
-                EnemyOutOfRange = true;
+                inRange = false;
             } else if (yDelta < -this.getRadius()) {
                 yDelta = -this.getRadius();
-                EnemyOutOfRange = true;
+                inRange = false;
             }
 
-            Vector toEnemy = new Vector(xDelta, yDelta);
-                    Vector newPos = this.getPosition().add(toEnemy);
-                    DiscreteCoordinates newPosition = newPos.toDiscreteCoordinates();
-                    this.changePosition(newPosition);
+            if (inRange) {
+                Vector toEnemy = new Vector(xDelta, yDelta);
+                Vector newPos = this.getPosition().add(toEnemy);
+                DiscreteCoordinates newPosition = newPos.toDiscreteCoordinates();
+                ArrayList<DiscreteCoordinates> neighboursCoords = (ArrayList<DiscreteCoordinates>) newPosition
+                        .getNeighbours();
+                for (DiscreteCoordinates neighbour : neighboursCoords) {
+                    if (this.changePosition(neighbour)) {
+                        break;
+                    }
                 }
-        if (originalCoords.equals(this.getPosition().toDiscreteCoordinates())) {
-            return false;
-        } else {
-            return true;
+            } else {
+                Vector toEnemy = new Vector(xDelta, yDelta);
+                Vector newPos = this.getPosition().add(toEnemy);
+                DiscreteCoordinates newPosition = newPos.toDiscreteCoordinates();
+                this.changePosition(newPosition);
+            }
         }
     }
 }

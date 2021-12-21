@@ -130,8 +130,9 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
     public boolean isDefeated() {
         if (this.units.size() == 0) {
             return true;
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
