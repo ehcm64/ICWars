@@ -49,8 +49,7 @@ public class AIPlayer extends ICWarsPlayer {
             case MOVE_UNIT:
                 this.dt += 0.1f;
                 if (waitFor(3, this.dt)) {
-                    if (this.selectedUnit.moveToClosestEnemyUnit()) {
-                    }
+                    this.selectedUnit.moveToClosestEnemyUnit();
                     if (this.selectedUnit != null) {
                         this.act = this.selectedUnit.getActions().get(0);                            
                         this.currentState = State.ACTION;

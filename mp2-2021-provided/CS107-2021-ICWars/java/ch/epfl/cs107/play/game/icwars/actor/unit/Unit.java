@@ -177,7 +177,7 @@ public abstract class Unit extends ICWarsActor {
     public Unit getClosestEnemyUnit() {
         Unit closestEnemyUnit = null;
         ArrayList<Unit> closeUnits = ((ICWarsArea) getOwnerArea())
-                .findCloseUnits(this.getPosition().toDiscreteCoordinates(), 20);
+                .findCloseUnits(this.getPosition().toDiscreteCoordinates(), 30);
         ArrayList<Unit> closeEnemyUnits = new ArrayList<Unit>();
         for (Unit unit : closeUnits) {
             if (unit.getFaction() != this.getFaction()) {
@@ -186,10 +186,10 @@ public abstract class Unit extends ICWarsActor {
         }
         if (closeEnemyUnits.size() != 0) {
             closestEnemyUnit = closeEnemyUnits.get(0);
-            float distance = (float) Math.sqrt(2 * this.getRadius() * this.getRadius() + 1);
+            float distance = (float) Math.sqrt(900);
             for (Unit enemyUnit : closeEnemyUnits) {
                 float unitsDistance = Vector.getDistance(this.getPosition(), enemyUnit.getPosition());
-                if (unitsDistance <= distance && enemyUnit.getHp() < closestEnemyUnit.getHp()) {
+                if (unitsDistance <= distance || (unitsDistance == distance && enemyUnit.getHp() < closestEnemyUnit.getHp())) {
                     closestEnemyUnit = enemyUnit;
                     distance = unitsDistance;
                 }
@@ -203,10 +203,42 @@ public abstract class Unit extends ICWarsActor {
         DiscreteCoordinates originalCoords = this.getPosition().toDiscreteCoordinates();
         Unit closestEnemyUnit = this.getClosestEnemyUnit();
         if (closestEnemyUnit != null) {
-            DiscreteCoordinates enemyCoords = closestEnemyUnit.getPosition().toDiscreteCoordinates();
-            ArrayList<DiscreteCoordinates> neighbours = (ArrayList<DiscreteCoordinates>) enemyCoords.getNeighbours();
-            for (DiscreteCoordinates neighbour : neighbours) {
-                this.changePosition(neighbour);
+            boolean EnemyOutOfRange = false;
+            Vector enemyPos = closestEnemyUnit.getPosition();
+            float xDelta =  enemyPos.getX() - this.getPosition().getX();
+            float yDelta = enemyPos.getY() - this.getPosition().getY();
+            if (xDelta >  this.getRadius()) {
+                xDelta = this.getRadius();
+                EnemyOutOfRange = true;
+            } else if (xDelta < -this.getRadius()) {
+                xDelta = -this.getRadius();
+                EnemyOutOfRange = true;
+            }
+            if (yDelta > this.getRadius()) {
+                yDelta = this.getRadius();
+                EnemyOutOfRange = true;
+            } else if (yDelta < -this.getRadius()) {
+                yDelta = -this.getRadius();
+                EnemyOutOfRange = true;
+            }
+
+            if (EnemyOutOfRange) {
+                for (int y = 0; y < 4; y++) {
+                    yDelta = y;
+                    Vector toEnemy = new Vector(xDelta, yDelta);
+                    Vector newPos = this.getPosition().add(toEnemy);
+                    DiscreteCoordinates newPosition = newPos.toDiscreteCoordinates();
+                    this.changePosition(newPosition);
+                    toEnemy = new Vector(xDelta, -yDelta);
+                    newPos = this.getPosition().add(toEnemy);
+                    newPosition = newPos.toDiscreteCoordinates();
+                    this.changePosition(newPosition);
+                }
+            } else {
+                ArrayList<DiscreteCoordinates> neighbours = (ArrayList<DiscreteCoordinates>)closestEnemyUnit.getPosition().toDiscreteCoordinates().getNeighbours();
+                for (DiscreteCoordinates neighbour : neighbours) {
+                    this.changePosition(neighbour);
+                }
             }
         }
         if (originalCoords.equals(this.getPosition().toDiscreteCoordinates())) {
