@@ -87,6 +87,9 @@ public abstract class Unit extends ICWarsActor {
         ((ICWarsInteractionVisitor) v).interactWith(this);
     }
 
+    /** Add all nodes in the unit's range of movement.
+     * 
+     */
     private void addAllNodes() {
         int fromX = (int) getPosition().getX();
         int fromY = (int) getPosition().getY();
@@ -106,42 +109,69 @@ public abstract class Unit extends ICWarsActor {
         }
     }
 
+    /** Get the unit's movement radius.
+     * 
+     * @return (int): the radius.
+     */
     public abstract int getRadius();
 
-    public Sprite getSprite() {
-        return this.sprite;
-    }
-
+    /** Get the unit's name.
+     * 
+     * @return (String): the name.
+     */
     public String getName() {
         return name;
     }
 
-    public float getHp() {
+    /** Get the unit's hp.
+     * 
+     * @return (float): the unit's hp.
+     */
+    public int getHp() {
         return hp;
     }
 
+    /** Set whether the unit has moved or not already.
+     * 
+     * @param state (boolean): the movement state in which to put the unit.
+     */
     public void setMoveState(boolean state) {
         this.hasMoved = state;
     }
 
+    /** Know whether the unit has moved yet or not.
+     * 
+     * @return (boolean): the state of movement of the unit.
+     */
     public boolean getMoveState() {
         return this.hasMoved;
     }
 
+    /** Set whether the unit has acted or not already.
+     * 
+     * @param state (boolean): the  action state in which to put the unit.
+     */
     public void setActionState(boolean state) {
         this.hasActed = state;
     }
 
+    /** Know whether the unit has acted yet or not.
+     * 
+     * @return (boolean): the state of action of the unit.
+     */
     public boolean getActionState() {
         return this.hasActed;
     }
 
+    /** Get the list of actions the unit can execute.
+     * 
+     * @return (ArrayList<Action>): the list of actions.
+     */
     public ArrayList<Action> getActions() {
         return this.actions;
     }
 
-    /**
-     * Draw the unit's range and a path from the unit position todestination
+    /** Draw the unit's range and a path from the unit position todestination
      * 
      * @param destination path destination
      * @param canvas      canvas
@@ -155,24 +185,38 @@ public abstract class Unit extends ICWarsActor {
         }
     }
 
-    public int takeDamage(int damage) {
+    /** Decrease the unit's hp by a certain amount.
+     * 
+     * @param damage (int): Amount by which to hurt the unit.
+     */
+    public void takeDamage(int damage) {
         if (damage > this.cellDefStars) {
             this.hp = this.hp - damage + this.cellDefStars;
         }
-        if (hp < 0)
-            hp = 0;
-        return hp;
+        if (this.hp < 0)
+            this.hp = 0;
     }
 
-    public int repair(int heal) {
-        hp += heal;
-        if (hp > maxHp)
-            hp = maxHp;
-        return hp;
+    /** Increase the unit's hp by a certain amount.
+     * 
+     * @param heal (int): Amount by which to heal the unit.
+     */
+    public void repair(int heal) {
+        this.hp += heal;
+        if (this.hp > this.maxHp)
+            this.hp = this.maxHp;
     }
 
+    /** Get the amount of damage this unit deals to enemies.
+     * 
+     * @return (int): the amount of damage.
+     */
     public abstract int getDamage();
 
+    /** Get the closest enemy unit.
+     * 
+     * @return (Unit): the closest enemy unit.
+     */
     public Unit getClosestEnemyUnit() {
         Unit closestEnemyUnit = null;
         int range = 0;
@@ -204,6 +248,9 @@ public abstract class Unit extends ICWarsActor {
         return closestEnemyUnit;
     }
 
+    /** Allow the unit to move automatically towards the closest enemy unit.
+     * 
+     */
     public void moveToClosestEnemyUnit() {
         Unit closestEnemyUnit = this.getClosestEnemyUnit();
         boolean inRange = true;

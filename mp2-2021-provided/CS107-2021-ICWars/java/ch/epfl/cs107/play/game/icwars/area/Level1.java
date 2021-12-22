@@ -3,9 +3,6 @@ package ch.epfl.cs107.play.game.icwars.area;
 import ch.epfl.cs107.play.game.areagame.actor.Background;
 import ch.epfl.cs107.play.math.DiscreteCoordinates;
 
-/**
- * Specific area
- */
 public class Level1 extends ICWarsArea {
 
 	@Override
@@ -18,20 +15,13 @@ public class Level1 extends ICWarsArea {
 		return new DiscreteCoordinates(2, 5);
 	}
 
-	protected void createArea() {
-		registerActor(new Background(this));
-	}
-
 	@Override
 	public DiscreteCoordinates getEnemySpawnPosition() {
 		return new DiscreteCoordinates(17, 5);
 	}
 
-	public int getNbOfSoldier() {
-		return (int) 1;
-	}
-
-	public int getNbOfTank() {
-		return (int) 1;
+	@Override
+	protected void createArea() {
+		registerActor(new Background(this));
 	}
 }

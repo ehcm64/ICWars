@@ -88,6 +88,9 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         ((ICWarsInteractionVisitor) v).interactWith(this);
     }
 
+    /** Do everything needed for the player to start his turn correctly.
+     * 
+     */
     public void startTurn() {
         this.currentState = State.NORMAL;
         centerCamera();
@@ -98,16 +101,35 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         this.turnStarting = true;
     }
 
+    /** Allow other classes to check in which state the player is.
+     * 
+     * @return (State): one of the player's possible states from the enum State.
+     */
     public State getPlayerState() {
         return this.currentState;
     }
 
+    /** Allow ICWars class to set the player's state.
+     * 
+     * @param state (State): one of the player's possible states from the enum State.
+     */
+    public void setPlayerState(State state) {
+        this.currentState = state;
+    }
+
+    /** Add a list of units to the player's current units.
+     * 
+     * @param units (ArrayList<Unit>): a list of units to add to the player's list of units. 
+     */
     public void addAllUnits(ArrayList<Unit> units) {
         for (Unit unit : units) {
             this.units.add(unit);
         }
     }
 
+    /** Remove all units in the player's list of units.
+     * 
+     */
     public void removeAllUnits() {
         ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
         for (Unit unit : this.units) {
@@ -121,10 +143,9 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         }
     }
 
-    public void setPlayerState(State state) {
-        this.currentState = state;
-    }
-
+    /** Remove all units in the player's list of units that are dead.
+     * 
+     */
     private void removeDeadUnits() {
         ArrayList<Unit> unitsToRemove = new ArrayList<Unit>();
         for (Unit unit : this.units) {
@@ -139,6 +160,10 @@ public abstract class ICWarsPlayer extends ICWarsActor implements Interactor {
         }
     }
 
+    /** Check if the player is defeated (all units are dead).
+     * 
+     * @return (boolean): true if the player is defeated or the opposite.
+     */
     public boolean isDefeated() {
         if (this.units.size() == 0) {
             return true;

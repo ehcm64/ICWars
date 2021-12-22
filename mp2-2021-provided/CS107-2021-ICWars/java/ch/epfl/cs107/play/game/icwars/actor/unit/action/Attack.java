@@ -6,7 +6,8 @@ import ch.epfl.cs107.play.game.actor.ImageGraphics;
 import ch.epfl.cs107.play.game.areagame.Area;
 import ch.epfl.cs107.play.game.areagame.io.ResourcePath;
 import ch.epfl.cs107.play.game.icwars.actor.ICWarsActor.Faction;
-import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer;
+import ch.epfl.cs107.play.game.icwars.actor.players.AIPlayer;
+import ch.epfl.cs107.play.game.icwars.actor.players.RealPlayer;
 import ch.epfl.cs107.play.game.icwars.actor.players.ICWarsPlayer.State;
 import ch.epfl.cs107.play.game.icwars.actor.unit.Unit;
 import ch.epfl.cs107.play.math.RegionOfInterest;
@@ -28,9 +29,10 @@ public class Attack extends Action {
     }
 
     @Override
-    public void doAction(float dt, ICWarsPlayer player, Keyboard keyboard) {
+    public void doAction(float dt, RealPlayer player, Keyboard keyboard) {
         Faction unitFaction = this.unit.getFaction();
-        ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(), this.unit.getRadius());
+        ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(),
+                this.unit.getRadius());
         ArrayList<Unit> enemyUnitsinAttackRange = new ArrayList<Unit>();
         for (Unit unit : unitsInAttackRange) {
             if (unit.getFaction() != unitFaction) {
@@ -70,9 +72,10 @@ public class Attack extends Action {
     }
 
     @Override
-    public void doAutoAction(float dt, ICWarsPlayer player, boolean wait) {
+    public void doAutoAction(float dt, AIPlayer player, boolean wait) {
         Faction unitFaction = this.unit.getFaction();
-        ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(), this.unit.getRadius());
+        ArrayList<Unit> unitsInAttackRange = this.area.findCloseUnits(this.unit.getPosition().toDiscreteCoordinates(),
+                this.unit.getRadius());
         ArrayList<Unit> enemyUnitsinAttackRange = new ArrayList<Unit>();
         for (Unit unit : unitsInAttackRange) {
             if (unit.getFaction() != unitFaction) {
@@ -81,20 +84,21 @@ public class Attack extends Action {
         }
         if (enemyUnitsinAttackRange.size() != 0) {
             this.unitToAttack = this.unit.getClosestEnemyUnit();
-            if (Vector.getDistance(this.unit.getPosition(), this.unitToAttack.getPosition()) <= this.unit.getRadius() && !wait) {
+            if (Vector.getDistance(this.unit.getPosition(), this.unitToAttack.getPosition()) <= this.unit.getRadius()
+                    && !wait) {
                 this.unitToAttack.takeDamage(this.unit.getDamage());
                 this.unit.setActionState(true);
                 this.unitToAttack = null;
                 player.setPlayerState(State.NORMAL);
-            } 
+            }
         }
     }
 
     @Override
     public void draw(Canvas canvas) {
-         if (this.unitToAttack != null ) {
+        if (this.unitToAttack != null) {
             this.cursor = new ImageGraphics(ResourcePath.getSprite("icwars/UIpackSheet"), 1.f, 1.f,
-                new RegionOfInterest(4 * 18, 26 * 18, 16, 16));
+                    new RegionOfInterest(4 * 18, 26 * 18, 16, 16));
             this.unitToAttack.centerCamera();
             this.cursor.setAnchor(this.unitToAttack.getPosition().add(1, 0));
             this.cursor.draw(canvas);

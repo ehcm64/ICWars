@@ -29,7 +29,7 @@ public class ICWars extends AreaGame {
 	private ICWarsPlayer currentPlayer;
 	private GameState currentGameState;
 	private RealPlayer allyPlayer;
-	private RealPlayer enemyPlayer;
+	//private RealPlayer enemyPlayer;
 	private AIPlayer computer;
 	private final String[] areas = { "icwars/Level0", "icwars/Level1" };
 	private int areaIndex;
@@ -44,17 +44,8 @@ public class ICWars extends AreaGame {
 		END;
 	}
 
-	/**
-	 * Add all the areas
-	 */
-	private void createAreas() {
-		addArea(new Level0());
-		addArea(new Level1());
-	}
-
 	@Override
 	public boolean begin(Window window, FileSystem fileSystem) {
-
 		if (super.begin(window, fileSystem)) {
 			createAreas();
 			areaIndex = 0;
@@ -65,54 +56,8 @@ public class ICWars extends AreaGame {
 		return false;
 	}
 
-	private void createUnits() {
-		removeUnitsFromTempList();
-		Soldier allySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
-		Tank allyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
-		this.allyUnits.add(allySoldier);
-		this.allyUnits.add(allyTank);
-
-		Soldier enemySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(9, 5), Faction.ENEMY);
-		Tank enemyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(8, 5), Faction.ENEMY);
-		this.enemyUnits.add(enemySoldier);
-		this.enemyUnits.add(enemyTank);
-	}
-
-	private void removeUnitsFromTempList() {
-		this.allyUnits = new ArrayList<Unit>();
-		this.enemyUnits = new ArrayList<Unit>();
-	}
-
-	private void resetPlayersAndUnits() {
-		ArrayList<ICWarsPlayer> playersToRemove = new ArrayList<ICWarsPlayer>();
-		for (ICWarsPlayer player : this.playerList) {
-			playersToRemove.add(player);
-		}
-		if (playersToRemove.size() != 0) {
-			for (ICWarsPlayer player : playersToRemove) {
-				this.playerList.remove(player);
-			}
-		}
-		createUnits();
-		this.computer = new AIPlayer(this.getCurrentArea(), ((ICWarsArea) getCurrentArea()).getEnemySpawnPosition(),
-				Faction.ENEMY, this.enemyUnits);
-		this.allyPlayer = new RealPlayer(this.getCurrentArea(),
-				((ICWarsArea) getCurrentArea()).getPlayerSpawnPosition(), Faction.ALLY, this.allyUnits);
-		this.playerList.add(this.allyPlayer);
-		this.playerList.add(this.computer);
-		removeUnitsFromTempList();
-	}
-
-	private void initArea(String areaKey) {
-		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
-		resetPlayersAndUnits();
-		this.computer.enterArea(area, ((ICWarsArea) getCurrentArea()).getEnemySpawnPosition());
-		this.allyPlayer.enterArea(area, ((ICWarsArea) getCurrentArea()).getPlayerSpawnPosition());
-	}
-
 	@Override
 	public void update(float deltaTime) {
-
 		Keyboard keyboard = getCurrentArea().getKeyboard();
 		switch (this.currentGameState) {
 			case INIT:
@@ -184,23 +129,13 @@ public class ICWars extends AreaGame {
 		super.update(deltaTime);
 	}
 
-	private void reset() {
-		// BUG : garde une ancienne unité aprés qu'elle ait bougé
-		this.allyPlayer.leaveArea();
-		this.computer.leaveArea();
-		areaIndex = 0;
-		initArea(areas[areaIndex]);
-		this.currentGameState = GameState.INIT;
-		this.allyPlayer.startTurn();
-	}
-
 	@Override
 	public void end() {
-		// TO DO NSM LE GAMEOVER
 		removeUnitsFromTempList();
 		this.allyPlayer.removeAllUnits();
 		this.computer.removeAllUnits();
 		System.out.println("GAME OVER");
+
 		ArrayList<Unit> units = new ArrayList<Unit>();
 		ICWarsArea area = (ICWarsArea) getCurrentArea();
 		DiscreteCoordinates position = this.allyPlayer.getPosition().toDiscreteCoordinates();
@@ -219,6 +154,88 @@ public class ICWars extends AreaGame {
 		return "ICWars";
 	}
 
+	/** Add all the areas
+	 * 
+	 */
+	private void createAreas() {
+		addArea(new Level0());
+		addArea(new Level1());
+	}
+
+	/** Create all the units of the ally player and of the enemy player.
+	 * 
+	 */
+	private void createUnits() {
+		removeUnitsFromTempList();
+		Soldier allySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(3, 5), Faction.ALLY);
+		Tank allyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(2, 5), Faction.ALLY);
+		this.allyUnits.add(allySoldier);
+		this.allyUnits.add(allyTank);
+
+		Soldier enemySoldier = new Soldier(getCurrentArea(), new DiscreteCoordinates(9, 5), Faction.ENEMY);
+		Tank enemyTank = new Tank(getCurrentArea(), new DiscreteCoordinates(8, 5), Faction.ENEMY);
+		this.enemyUnits.add(enemySoldier);
+		this.enemyUnits.add(enemyTank);
+	}
+
+	/** Remove the units from the temporary list used to give units to players.
+	 * 
+	 */
+	private void removeUnitsFromTempList() {
+		this.allyUnits = new ArrayList<Unit>();
+		this.enemyUnits = new ArrayList<Unit>();
+	}
+
+	/** Reset the players and units to their intial states and number.
+	 * 
+	 */
+	private void resetPlayersAndUnits() {
+		ArrayList<ICWarsPlayer> playersToRemove = new ArrayList<ICWarsPlayer>();
+		for (ICWarsPlayer player : this.playerList) {
+			playersToRemove.add(player);
+		}
+		if (playersToRemove.size() != 0) {
+			for (ICWarsPlayer player : playersToRemove) {
+				this.playerList.remove(player);
+			}
+		}
+		createUnits();
+		this.computer = new AIPlayer(this.getCurrentArea(), ((ICWarsArea) getCurrentArea()).getEnemySpawnPosition(),
+				Faction.ENEMY, this.enemyUnits);
+		this.allyPlayer = new RealPlayer(this.getCurrentArea(),
+				((ICWarsArea) getCurrentArea()).getPlayerSpawnPosition(), Faction.ALLY, this.allyUnits);
+		this.playerList.add(this.allyPlayer);
+		this.playerList.add(this.computer);
+		removeUnitsFromTempList();
+	}
+
+	/** Initiate the game area.
+	 * 
+	 * @param areaKey (String): the name of the area to initiate.
+	 */
+	private void initArea(String areaKey) {
+		ICWarsArea area = (ICWarsArea) setCurrentArea(areaKey, true);
+		resetPlayersAndUnits();
+		this.computer.enterArea(area, ((ICWarsArea) getCurrentArea()).getEnemySpawnPosition());
+		this.allyPlayer.enterArea(area, ((ICWarsArea) getCurrentArea()).getPlayerSpawnPosition());
+	}
+
+	/** Will reset the game to the beginning.
+	 * 
+	 */
+	private void reset() {
+		// BUG : garde une ancienne unité aprés qu'elle ait bougé
+		this.allyPlayer.leaveArea();
+		this.computer.leaveArea();
+		areaIndex = 0;
+		initArea(areas[areaIndex]);
+		this.currentGameState = GameState.INIT;
+		this.allyPlayer.startTurn();
+	}
+
+	/** Will go to next level or show game over.
+	 * 
+	 */
 	protected void nextLevel() {
 		areaIndex += 1;
 		if (areaIndex < areas.length) {

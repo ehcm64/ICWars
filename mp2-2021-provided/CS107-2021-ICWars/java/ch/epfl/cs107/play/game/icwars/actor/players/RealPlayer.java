@@ -42,6 +42,7 @@ public class RealPlayer extends ICWarsPlayer {
         this.act = null;
     }
 
+    @Override
     public void update(float deltaTime) {
         
         Keyboard keyboard = getOwnerArea().getKeyboard();

@@ -15,25 +15,10 @@ public abstract class ICWarsArea extends Area {
 
     private ICWarsBehavior behavior;
 
-    /**
-     * Create the area by adding it all actors
-     * called by begin method
-     * Note it set the Behavior as needed !
-     */
-    protected abstract void createArea();
-
-    /// EnigmeArea extends Area
-
     @Override
     public final float getCameraScaleFactor() {
         return ICWars.CAMERA_SCALE_FACTOR;
     }
-
-    public abstract DiscreteCoordinates getPlayerSpawnPosition();
-
-    public abstract DiscreteCoordinates getEnemySpawnPosition();
-
-    /// Demo2Area implements Playable
 
     @Override
     public boolean begin(Window window, FileSystem fileSystem) {
@@ -47,6 +32,28 @@ public abstract class ICWarsArea extends Area {
         return false;
     }
 
+    /** Get the spawn position of the AllyPlayer on the area.
+     * 
+     * @return (DiscreteCoordinates): the spawn position.
+     */
+    public abstract DiscreteCoordinates getPlayerSpawnPosition();
+
+    /** Get the spawn position of the EnemyPlayer on the area.
+     * 
+     * @return (DiscreteCoordinates): the spawn position.
+     */
+    public abstract DiscreteCoordinates getEnemySpawnPosition();
+
+    /**
+     * Create the area by adding it all actors
+     * called by begin method
+     * Note it set the Behavior as needed !
+     */
+    protected abstract void createArea();
+
+    /** Get the list of all close units in a certain range no matter which faction.
+     * 
+     */
     public ArrayList<Unit> findCloseUnits(DiscreteCoordinates coords, int range) {
         ArrayList<Unit> unitsInRange = new ArrayList<Unit>();
         int xPos = coords.x;
@@ -63,6 +70,10 @@ public abstract class ICWarsArea extends Area {
         return unitsInRange;
     }
 
+    /** Get the list of all units registered in the area no matter which faction.
+     * 
+     * @return (ArrayList<Unit>): the list of units.
+     */
     public ArrayList<Unit> getAllUnits() {
         ArrayList<Unit> allUnits = new ArrayList<Unit>();
         for (Actor actor : this.getActors()) {
@@ -73,6 +84,11 @@ public abstract class ICWarsArea extends Area {
         return allUnits;
     }
 
+    /** Get the type of a cell by knowing its coordinates.
+     * 
+     * @param coords (DiscreteCoordinates): the coordinates of the cell.
+     * @return (ICWarsCellType): the type of the cell.
+     */
     public ICWarsCellType currentCellType(DiscreteCoordinates coords) {
         int x = coords.x;
         int y = coords.y;
@@ -81,6 +97,11 @@ public abstract class ICWarsArea extends Area {
         return type;
     }
 
+    /** Get the defense stars of a cell by knowing its coordinates.
+     * 
+     * @param coords (DiscreteCoordinates): the coordinates of the cell.
+     * @return (int): the defense stars of the cell.
+     */
     public int currentCellDefStars(DiscreteCoordinates coords) {
         int x = coords.x;
         int y = coords.y;

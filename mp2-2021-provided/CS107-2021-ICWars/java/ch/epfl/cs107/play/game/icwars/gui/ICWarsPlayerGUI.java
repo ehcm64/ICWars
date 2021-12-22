@@ -23,14 +23,26 @@ public class ICWarsPlayerGUI implements Graphics {
         this.infoPanel = new ICWarsInfoPanel(cameraScaleFactor);
     }
 
+    /** Set (in the gui) the selected unit by the player to be drawn.
+     * 
+     * @param selectedUnit (Unit): the unit selected by the player.
+     */
     public void setPlayerSelectedUnit(Unit selectedUnit) {
         this.playerSelectedUnit = selectedUnit;
     }
 
+    /** Set (in the gui) the unit which is being viewed by the player.
+     * 
+     * @param viewedUnit (Unit): the unit being viewed by the player.
+     */
     public void setViewedUnit(Unit viewedUnit) {
         this.viewedUnit = viewedUnit;
     }
 
+    /** Set (in the gui) the type of the cell being viewed by the player.
+     * 
+     * @param type (ICWarsCellType): the type of the cell.
+     */
     public void setCellType(ICWarsCellType type) {
         this.cellType = type;
     }

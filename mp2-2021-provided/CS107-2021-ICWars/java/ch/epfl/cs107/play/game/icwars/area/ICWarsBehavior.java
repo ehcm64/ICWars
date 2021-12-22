@@ -26,21 +26,31 @@ public class ICWarsBehavior extends AreaBehavior {
 			this.defStars = defStars;
 		}
 
+		/** Get the type of a cell by knowing the integer value of its type.
+		 * 
+		 * @param type (int): the integer value.
+		 * @return (ICWarsCellType): the type of the cell from the enum.
+		 */
 		public static ICWarsCellType toType(int type) {
 			for (ICWarsCellType ict : ICWarsCellType.values()) {
 				if (ict.type == type)
 					return ict;
 			}
-			// When you add a new color, you can print the int value here before assign it
-			// to a type
 			System.out.println(type);
 			return NONE;
 		}
 
+		/** Get the number of defense stars of a cell.
+		 * 
+		 * @return (int): the number of defense stars.
+		 */
 		public int getDefenseStar() {
 			return this.defStars;
 		}
 
+		/** Transforms the type of a cell to a String.
+		 * 
+		 */
         public String typeToString() {
             return this.toString();
         }
@@ -64,17 +74,19 @@ public class ICWarsBehavior extends AreaBehavior {
 		}
 	}
 
+	/** Get the type of the cell by knowing its x and y coordinates.
+	 * 
+	 * @param x (int): the x position of the cell.
+	 * @param y (int): the y position of the cell.
+	 * @return (ICWarsCellType): the type of the cell.
+	 */
 	public ICWarsCellType getCellType(int x, int y) {
 		ICWarsCell cell = (ICWarsCell)getCell(x, y);
 		ICWarsCellType type = cell.type;
 		return type;
 	}
 
-	/**
-	 * Cell adapted to the Tuto2 game
-	 */
 	public class ICWarsCell extends AreaBehavior.Cell {
-		/// Type of the cell following the enum
 		private final ICWarsCellType type;
 
 		/**
@@ -82,7 +94,7 @@ public class ICWarsBehavior extends AreaBehavior {
 		 * 
 		 * @param x    (int): x coordinate of the cell
 		 * @param y    (int): y coordinate of the cell
-		 * @param type (EnigmeCellType), not null
+		 * @param type (ICWarsCellType), not null
 		 */
 		public ICWarsCell(int x, int y, ICWarsCellType type) {
 			super(x, y);
