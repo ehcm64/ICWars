@@ -1,3 +1,7 @@
 {
-    "java.format.settings.url": "eclipse-formatter.xml"
+    "java.format.settings.url": "eclipse-formatter.xml",
+    "java.project.sourcePaths": [
+        "java",
+        "mp2-2021-provided/CS107-2021-ICWars/java/ch/epfl/cs107/play"
+    ]
 }
