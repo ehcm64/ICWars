@@ -6,6 +6,10 @@ Chaque joueur commence un niveau avec deux unités :
 - un **Tank**
 - un **Soldat**
 
+# Comment Jouer ?
+
+Pour jouer il suffit de télécharger le repo et lancer le fichier **Play.java** avec Java 11 ou plus récent.
+
 # Contrôles
 Il y a plusieurs touches activables pour jouer à **ICWARS** :
 - Les **flèches directionnelles** : Pour se déplacer dans le **jeu**.
