@@ -1,5 +1,7 @@
 # ICWARS
 
+![alt text](https://github.com/ehcm64/Mini-Projet-2/blob/688d981322f80c35f37704ae35fff1f9ed5ce5db/Screenshot%20from%202022-05-16%2017-05-15.png)
+
 Le but du jeu est de battre son adversaire en détruisant toutes ses unités.
 
 Chaque joueur commence un niveau avec deux unités : 
